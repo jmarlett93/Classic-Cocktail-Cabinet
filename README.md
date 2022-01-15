@@ -1,8 +1,6 @@
-# Marlett Software 93
+# Classic cocktail cabinet
 
-This project is an  [Angular CLI](https://github.com/angular/angular-cli) micro app deployed to github pages for my 
-personal website. I use this app to test out new technologies from little things like Canvas and CSS shenanigans 
-to beefier application processes such as service workers. 
+This project uses vue.js
 
 Visit the live site [here](https://jmarlett93.github.io/marlett-software-93)
 
