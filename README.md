@@ -1,4 +1,4 @@
-# cocktail-app
+#classic cocktail cabinet app
 
 This app will help a home bartender build up a liquor cabinet for classic cocktails with the fewest steps.
 
