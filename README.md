@@ -1,16 +1,39 @@
-# Marlett Software 93
+# cocktail-app
 
-This project is an  [Angular CLI](https://github.com/angular/angular-cli) micro app deployed to github pages for my 
-personal website. I use this app to test out new technologies from little things like Canvas and CSS shenanigans 
-to beefier application processes such as service workers. 
+This app will help a home bartender build up a liquor cabinet for classic cocktails with the fewest steps.
 
-Visit the live site [here](https://jmarlett93.github.io/marlett-software-93)
+## Project setup
 
-## Build
+First time step.
 
-Run 
+```
+nvm install latest
+```
 
-> ng build --prod --output-path docs --base-href /marlett-software-93/ 
+Then
 
-to cut a release configuration for GitHub pages. Make a copy of index.html named 404.html and save to docs folder. 
-Push master branch.
+```
+nvm use 17
+```
+
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+
+```
+npm run build
+```
+
+### Lints and fixes files
+
+```
+npm run lint
+```
