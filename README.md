@@ -1,14 +1,39 @@
-# Classic cocktail cabinet
+#classic cocktail cabinet app
 
-This project uses vue.js
+This app will help a home bartender build up a liquor cabinet for classic cocktails with the fewest steps.
 
-Visit the live site [here](https://jmarlett93.github.io/marlett-software-93)
+## Project setup
 
-## Build
+First time step.
 
-Run 
+```
+nvm install latest
+```
 
-> ng build --prod --output-path docs --base-href /marlett-software-93/ 
+Then
 
-to cut a release configuration for GitHub pages. Make a copy of index.html named 404.html and save to docs folder. 
-Push master branch.
+```
+nvm use 17
+```
+
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+
+```
+npm run build
+```
+
+### Lints and fixes files
+
+```
+npm run lint
+```
