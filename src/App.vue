@@ -1,14 +1,15 @@
 <template>
-  <HomePage msg="Cocktail Lounge" />
+  <!-- <HomePage msg="Cocktail Lounge" /> -->
+  <h1>Hello</h1>
 </template>
 
 <script>
-import HomePage from './components/HomePage.vue';
+// import HomePage from './components/HomePage.vue';
 
 export default {
   name: 'App',
   components: {
-    HomePage,
+    // HomePage,
   },
 };
 </script>
