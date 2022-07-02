@@ -1,0 +1,31 @@
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+@import '../../node_modules/bootstrap/scss/mixins';
+
+$body-bg: #93a3b1;
+$body-color: #ffffff;
+
+$primary: #4f5d75;
+// #d8d5db;
+$secondary: #7c898b;
+$success: #636564;
+$info: #eae8ff;
+$warning: #280003;
+$danger: #c2847a;
+$light: #eee0cb;
+$dark: #2d3142;
+
+//$alt-background: #eae8ff;
+$alt-background: #d8d5db;
+$alt-color-text: #2d3142;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  'light': $light,
+  'dark': $dark,
+);
