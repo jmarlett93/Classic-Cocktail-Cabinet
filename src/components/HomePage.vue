@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="alt-background">
     <h1>{{ msg }}</h1>
     <h4>building your cocktail bar one bottle at a time</h4>
   </div>
@@ -15,19 +15,11 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
+<style scoped lang="scss">
+
+h4 {
   margin: 40px 0 0;
+  font-family: monospace, 'Courier New', Courier;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
