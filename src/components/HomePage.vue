@@ -5,9 +5,9 @@
   </div>
   <div class="container">
     <div class="d-inline-flex flex-md-row flex-column">
-      <button type="button" class="btn btn-outline-primary m-2">John</button>
-      <button type="button" class="btn btn-outline-primary m-2">Is</button>
-      <button type="button" class="btn btn-outline-primary m-2">Gay</button>
+      <button type="button" to="/by-the-bottle" class="btn btn-outline-primary m-2">John</button>
+      <button type="button" to="/from-the-drink" class="btn btn-outline-primary m-2">Is</button>
+      <button type="button" to="/tools-and-techniques" class="btn btn-outline-primary m-2">Gay</button>
     </div>
   </div>
 </template>
