@@ -2,7 +2,7 @@
   <h1>Bottle Path homie</h1>
 </template>
 
-<!-- <script>
+<script>
 export default {
   name: 'BottlePath',
 };
@@ -13,4 +13,4 @@ h4 {
   margin: 40px 0 0;
   font-family: monospace, 'Courier New', Courier;
 }
-</style> -->
+</style>

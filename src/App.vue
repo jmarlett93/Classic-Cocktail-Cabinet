@@ -4,17 +4,11 @@
 
 <script>
 import HomePage from './components/HomePage.vue';
-import BottlePath from './components/BottlePath.vue';
-import DrinkPath from './components/DrinkPath.vue';
-import ToolsAndTechniques from './components/ToolsAndTechniques.vue';
 
 export default {
   name: 'App',
   components: {
     HomePage,
-    BottlePath, //I dont get why it doesnt like these?
-    DrinkPath,
-    ToolsAndTechniques,
   },
 };
 </script>

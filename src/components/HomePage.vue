@@ -5,10 +5,11 @@
   </div>
   <div class="container">
     <div class="d-inline-flex flex-md-row flex-column">
-      <button type="button" to="/by-the-bottle" class="btn btn-outline-primary m-2">John</button>
-      <button type="button" to="/from-the-drink" class="btn btn-outline-primary m-2">Is</button>
-      <button type="button" to="/tools-and-techniques" class="btn btn-outline-primary m-2">Gay</button>
+      <router-link to="/by-the-bottle" class="btn btn-outline-primary m-2">Bottle</router-link>
+      <router-link to="/from-the-drink" class="btn btn-outline-primary m-2">Drink</router-link>
+      <router-link to="/tools-and-techniques" class="btn btn-outline-primary m-2">Tools</router-link>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
