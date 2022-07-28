@@ -1,4 +1,4 @@
-export interface Liqour {
+/*export interface Liqour {
   name: string;
   type?: string;
   suggestions?: string[];
@@ -14,7 +14,7 @@ export interface Recipe {
   ingredients: Ingredient[];
   name: string;
   instructions: string;
-}
+} */
 
 export const liquors = [
   { name: 'Bourbon', type: 'Whiskey' },
@@ -44,7 +44,7 @@ export const liquors = [
   { name: 'Kahlua' },
 ];
 
-export const recipes: Recipe[] = [
+export const recipes = [
   { name: 'Old Fashioned', ingredients: [{ name: 'Bourbon' }], instructions: 'sample text' },
   { name: 'Manhattan', ingredients: [{ name: 'Bourbon' }, { name: 'Sweet Vermouth' }], instructions: 'sample text' },
   { name: 'Martini', ingredients: [{ name: 'Gin' }, { name: 'Dry Vermouth' }], instructions: 'sample text' },

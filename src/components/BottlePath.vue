@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import * as data from '../assets/recipes';
+console.log(data.liquors);
 export default {
   name: 'BottlePath',
 };
