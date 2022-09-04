@@ -1,5 +1,6 @@
 <template>
   <h1>Bottle Path homie</h1>
+  <input type="text" v-model="input" placeholder="search some alcohol..." />
 </template>
 
 <script>
