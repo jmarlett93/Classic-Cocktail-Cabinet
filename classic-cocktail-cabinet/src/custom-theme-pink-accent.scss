@@ -1,0 +1,168 @@
+@use '@angular/material' as mat;
+@use 'sass:map';
+@use 'sass:color';
+@use './theme-variables.scss' as *;
+
+$color-primary: #607d8b; // Blue Grey
+$color-secondary: #9e9e9e; // Grey
+$color-tertiary: #e91e63; // Pink
+$color-neutral: #d7ccc8; // Brown Grey
+$color-neutral-variant: #e1bee7; // Light Purple
+
+$_palettes: (
+  primary: (
+    0: #000000,
+    10: color.adjust($color-primary, $lightness: -45%),
+    20: color.adjust($color-primary, $lightness: -35%),
+    25: color.adjust($color-primary, $lightness: -30%),
+    30: color.adjust($color-primary, $lightness: -25%),
+    35: color.adjust($color-primary, $lightness: -20%),
+    40: color.adjust($color-primary, $lightness: -15%),
+    50: $color-primary,
+    // Main color
+    60: color.adjust($color-primary, $lightness: +15%),
+    70: color.adjust($color-primary, $lightness: +25%),
+    80: color.adjust($color-primary, $lightness: +35%),
+    90: color.adjust($color-primary, $lightness: +45%),
+    95: color.adjust($color-primary, $lightness: +50%),
+    98: color.adjust($color-primary, $lightness: +52%),
+    99: color.adjust($color-primary, $lightness: +53%),
+    100: #ffffff,
+  ),
+  secondary: (
+    0: #000000,
+    10: color.adjust($color-secondary, $lightness: -45%),
+    20: color.adjust($color-secondary, $lightness: -35%),
+    25: color.adjust($color-secondary, $lightness: -30%),
+    30: color.adjust($color-secondary, $lightness: -25%),
+    35: color.adjust($color-secondary, $lightness: -20%),
+    40: color.adjust($color-secondary, $lightness: -15%),
+    50: $color-secondary,
+    // Main color
+    60: color.adjust($color-secondary, $lightness: +15%),
+    70: color.adjust($color-secondary, $lightness: +25%),
+    80: color.adjust($color-secondary, $lightness: +35%),
+    90: color.adjust($color-secondary, $lightness: +45%),
+    95: color.adjust($color-secondary, $lightness: +50%),
+    98: color.adjust($color-secondary, $lightness: +52%),
+    99: color.adjust($color-secondary, $lightness: +53%),
+    100: #ffffff,
+  ),
+  tertiary: (
+    0: #000000,
+    10: color.adjust($color-tertiary, $lightness: -45%),
+    20: color.adjust($color-tertiary, $lightness: -35%),
+    25: color.adjust($color-tertiary, $lightness: -30%),
+    30: color.adjust($color-tertiary, $lightness: -25%),
+    35: color.adjust($color-tertiary, $lightness: -20%),
+    40: color.adjust($color-tertiary, $lightness: -15%),
+    50: $color-tertiary,
+    // Main color
+    60: color.adjust($color-tertiary, $lightness: +15%),
+    70: color.adjust($color-tertiary, $lightness: +25%),
+    80: color.adjust($color-tertiary, $lightness: +35%),
+    90: color.adjust($color-tertiary, $lightness: +45%),
+    95: color.adjust($color-tertiary, $lightness: +50%),
+    98: color.adjust($color-tertiary, $lightness: +52%),
+    99: color.adjust($color-tertiary, $lightness: +53%),
+    100: #ffffff,
+  ),
+  neutral: (
+    0: #000000,
+    10: color.adjust($color-neutral, $lightness: -45%),
+    20: color.adjust($color-neutral, $lightness: -35%),
+    25: color.adjust($color-neutral, $lightness: -30%),
+    30: color.adjust($color-neutral, $lightness: -25%),
+    35: color.adjust($color-neutral, $lightness: -20%),
+    40: color.adjust($color-neutral, $lightness: -15%),
+    50: $color-neutral,
+    // Main color
+    60: color.adjust($color-neutral, $lightness: +15%),
+    70: color.adjust($color-neutral, $lightness: +25%),
+    80: color.adjust($color-neutral, $lightness: +35%),
+    90: color.adjust($color-neutral, $lightness: +45%),
+    95: color.adjust($color-neutral, $lightness: +50%),
+    98: color.adjust($color-neutral, $lightness: +52%),
+    99: color.adjust($color-neutral, $lightness: +53%),
+    100: #ffffff,
+  ),
+  neutral-variant: (
+    0: #000000,
+    10: color.adjust($color-neutral-variant, $lightness: -45%),
+    20: color.adjust($color-neutral-variant, $lightness: -35%),
+    25: color.adjust($color-neutral-variant, $lightness: -30%),
+    30: color.adjust($color-neutral-variant, $lightness: -25%),
+    35: color.adjust($color-neutral-variant, $lightness: -20%),
+    40: color.adjust($color-neutral-variant, $lightness: -15%),
+    50: $color-neutral-variant,
+    // Main color
+    60: color.adjust($color-neutral-variant, $lightness: +15%),
+    70: color.adjust($color-neutral-variant, $lightness: +25%),
+    80: color.adjust($color-neutral-variant, $lightness: +35%),
+    90: color.adjust($color-neutral-variant, $lightness: +45%),
+    95: color.adjust($color-neutral-variant, $lightness: +50%),
+    98: color.adjust($color-neutral-variant, $lightness: +52%),
+    99: color.adjust($color-neutral-variant, $lightness: +53%),
+    100: #ffffff,
+  ),
+  error: (
+    0: #000000,
+    10: #410002,
+    20: #690005,
+    25: #7e0007,
+    30: #93000a,
+    35: #a80710,
+    40: #ba1a1a,
+    50: #de3730,
+    60: #ff5449,
+    70: #ff897d,
+    80: #ffb4ab,
+    90: #ffdad6,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+);
+
+$_rest: (
+  secondary: map.get($_palettes, secondary),
+  neutral: map.get($_palettes, neutral),
+  neutral-variant: map.get($_palettes, neutral-variant),
+  error: map.get($_palettes, error),
+);
+$_primary: map.merge(map.get($_palettes, primary), $_rest);
+$_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
+
+$custom-text-colors: (
+  main-text: #212121,
+  // Primary text color
+  secondary-text: #757575,
+  // Secondary text color
+  disabled-text: rgba(#212121, 0.38),
+  // Disabled text (38% opacity of main text)
+  hint-text: rgba(#212121, 0.38),
+  // Hint text (38% opacity of main text)
+  divider: #bdbdbd,
+  // Divider color
+  icons: #ffffff, // Icons/text color (typically for use on colored backgrounds)
+);
+
+// Create the theme
+$my-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: $_primary,
+      tertiary: $_tertiary,
+    ),
+    typography: (
+      bold-weight: 900,
+    ),
+  )
+);
+
+.primary-background {
+  background-color: $color-primary;
+  color: $color-neutral-variant;
+}

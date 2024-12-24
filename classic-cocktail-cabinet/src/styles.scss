@@ -1,0 +1,21 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+@use 'custom-theme-pink-accent.scss' as *;
+@include mat.core();
+
+$classic-cocktail-cabinet-theme: $my-theme;
+
+:root {
+  @include mat.all-component-themes($classic-cocktail-cabinet-theme);
+}
+
+@include mat.typography-hierarchy($classic-cocktail-cabinet-theme);
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
