@@ -2,6 +2,10 @@
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 @use 'custom-theme-pink-accent.scss' as *;
+@use 'theme-variables.scss' as *;
+@use 'tailwindcss/base';
+@use 'tailwindcss/utilities';
+
 @include mat.core();
 
 $classic-cocktail-cabinet-theme: $my-theme;
@@ -17,5 +21,5 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Chivo', serif;
 }

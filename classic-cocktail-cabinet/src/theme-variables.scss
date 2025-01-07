@@ -6,4 +6,7 @@ $color-tertiary: #e91e63; // Pink
 $color-neutral: #d7ccc8; // Brown Grey
 $color-neutral-variant: #e1bee7; // Light Purple
 $color-neutral-variant-light: color.adjust($color-neutral-variant, $lightness: +50%);
-$color-primary-light: color.adjust($color-primary, $lightness: +50%);
+$color-primary-light: color.adjust($color-primary, $lightness: +25%);
+
+$font-script: 'Playwrite AT Guides', serif;
+$font-primary: 'Chivo', serif;

@@ -157,6 +157,8 @@ $my-theme: mat.define-theme(
       tertiary: $_tertiary,
     ),
     typography: (
+      brand-family: 'Playwrite AU QLD, serif',
+      plain-family: 'Chivo, serif',
       bold-weight: 900,
     ),
   )
