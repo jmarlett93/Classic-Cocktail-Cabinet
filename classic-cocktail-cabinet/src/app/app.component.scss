@@ -2,7 +2,6 @@
 @use 'sass:color';
 .mat-toolbar {
   background-color: $color-primary;
-  color: color.adjust($color-neutral-variant, $lightness: +30%);
 }
 
 .mat-icon {

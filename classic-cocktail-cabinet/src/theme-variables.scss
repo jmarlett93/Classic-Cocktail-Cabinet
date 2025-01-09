@@ -3,10 +3,10 @@
 $color-primary: #607d8b; // Blue Grey
 $color-secondary: #9e9e9e; // Grey
 $color-tertiary: #e91e63; // Pink
-$color-neutral: #d7ccc8; // Brown Grey
-$color-neutral-variant: #e1bee7; // Light Purple
+$color-neutral: #384962; // slate Grey
+$color-neutral-variant: #222229; // dark purple
 $color-neutral-variant-light: color.adjust($color-neutral-variant, $lightness: +50%);
 $color-primary-light: color.adjust($color-primary, $lightness: +25%);
 
-$font-script: 'Playwrite AT Guides', serif;
+$font-script: 'Playwrite AU QLD', sans-serif;
 $font-primary: 'Chivo', serif;

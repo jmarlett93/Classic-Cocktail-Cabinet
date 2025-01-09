@@ -1,13 +1,28 @@
 <div class="flex flex-col items-center justify-center h-screen">
-  <mat-form-field appearance="outline" class="w-1/2">
-    <mat-label>Enter your text</mat-label>
-    <input class="p-6 border rounded-md" matInput />
-  </mat-form-field>
-  <div class="flex space-x-2 mt-4">
-    <mat-chip-grid>
-      <mat-chip class="cursor-pointer m-4 p-2 rounded-m">Suggestion 1</mat-chip>
-      <mat-chip class="cursor-pointer m-4 p-2 rounded-m">Suggestion 2</mat-chip>
-      <mat-chip class="cursor-pointer m-4 p-2 rounded-m">Suggestion 3</mat-chip>
-    </mat-chip-grid>
+  <div class="w-1/2 mb-10">
+    <h3 class="text-center mb-10">Welcome!</h3>
+    <p class="text-center">
+      We are here to help you stock your cocktail cabinet or discover recipes from what you already have.
+    </p>
+  </div>
+  <div class="w-1/2">
+    <mat-form-field appearance="outline" class="w-full">
+      <input
+        [placeholder]="placeholderText()"
+        [ngModel]="inputText()"
+        (ngModelChange)="setInput($event)"
+        (keydown.enter)="userPromptStore.updatePrompt(inputText())"
+        matInput
+      />
+    </mat-form-field>
+  </div>
+  <div class="flex space-x-1 mt-4">
+    <mat-chip-set>
+      <mat-chip (click)="setInput('Bourbon... or maybe Gin')" class="m-3 p-2 rounded-m mat-secondary-text"
+        >Bourbon or Gin?</mat-chip
+      >
+      <mat-chip (click)="setInput('I like martinis')" class="m-3 p-2 rounded-m">Do you like martinis?</mat-chip>
+      <mat-chip (click)="setInput('Give me something bold!')" class="m-3 p-2 rounded-m">Bold new flavor?</mat-chip>
+    </mat-chip-set>
   </div>
 </div>
