@@ -1,12 +1,12 @@
-<div class="flex flex-col items-center justify-center h-screen">
-  <div class="w-1/2 mb-10">
-    <h3 class="text-center mb-10">Welcome!</h3>
-    <p class="text-center">
+<div class="ctl-flex ctl-flex-col ctl-items-center ctl-justify-center ctl-h-screen">
+  <div class="ctl-w-1/2 ctl-mb-10">
+    <h3 class="ctl-text-center ctl-mb-10">Welcome!</h3>
+    <p class="ctl-text-center">
       We are here to help you stock your cocktail cabinet or discover recipes from what you already have.
     </p>
   </div>
-  <div class="w-1/2">
-    <mat-form-field appearance="outline" class="w-full">
+  <div class="ctl-w-1/2">
+    <mat-form-field appearance="outline" class="ctl-w-full">
       <input
         [placeholder]="placeholderText()"
         [ngModel]="inputText()"
@@ -16,13 +16,17 @@
       />
     </mat-form-field>
   </div>
-  <div class="flex space-x-1 mt-4">
+  <div class="ctl-flex ctl-space-x-1 ctl-mt-4">
     <mat-chip-set>
-      <mat-chip (click)="setInput('Bourbon... or maybe Gin')" class="m-3 p-2 rounded-m mat-secondary-text"
+      <mat-chip (click)="setInput('Bourbon... or maybe Gin')" class="ctl-m-3 ctl-p-2 ctl-rounded-m mat-secondary-text"
         >Bourbon or Gin?</mat-chip
       >
-      <mat-chip (click)="setInput('I like martinis')" class="m-3 p-2 rounded-m">Do you like martinis?</mat-chip>
-      <mat-chip (click)="setInput('Give me something bold!')" class="m-3 p-2 rounded-m">Bold new flavor?</mat-chip>
+      <mat-chip (click)="setInput('I like martinis')" class="ctl-m-3 ctl-p-2 ctl-rounded-m"
+        >Do you like martinis?</mat-chip
+      >
+      <mat-chip (click)="setInput('Give me something bold!')" class="ctl-m-3 ctl-p-2 ctl-rounded-m"
+        >Bold new flavor?</mat-chip
+      >
     </mat-chip-set>
   </div>
 </div>

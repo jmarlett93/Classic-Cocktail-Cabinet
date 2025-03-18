@@ -1,7 +1,30 @@
-<main class="main primary-background">
-  <mat-toolbar class="primary-background">
-    <h1>Classic Cocktail Cabinet</h1>
-  </mat-toolbar>
+<header class="ctl-text-white ctl-p-4">
+  <h1 class="ctl-text-2xl ctl-font-bold">{{ title }}</h1>
+
+  <nav class="ctl-mt-4">
+    <ul class="ctl-flex ctl-space-x-4">
+      <!-- Your navigation links -->
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="ctl-nav-link">
+          <mat-icon>home</mat-icon>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/liquor-recommendations" routerLinkActive="active" class="ctl-nav-link">
+          <mat-icon>chat</mat-icon>
+          <span>Liquor Recommendations</span>
+        </a>
+      </li>
+      <!-- Other navigation items -->
+    </ul>
+  </nav>
+</header>
+
+<main class="ctl-container ctl-mx-auto ctl-p-4">
+  <router-outlet></router-outlet>
 </main>
 
-<router-outlet />
+<footer class="ctl-bg-gray-200 ctl-p-4 ctl-text-center ctl-mt-auto">
+  <p>© {{ currentYear }} Classic Cocktail Cabinet</p>
+</footer>

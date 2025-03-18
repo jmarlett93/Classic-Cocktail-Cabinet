@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
 import { UserPromptInfoStore } from '../stores/user-prompt-info.store';
 
 @Component({

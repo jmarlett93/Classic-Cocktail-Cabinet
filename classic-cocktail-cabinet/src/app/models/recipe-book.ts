@@ -33,7 +33,7 @@ export enum LiqourType {
 }
 
 export const recipeBook: Recipe[] = [];
-export const Liquors: Liqour[] = [
+export const liquors: Liqour[] = [
   {
     name: 'Amaro Montenegro',
     type: LiqourType.AMARO,
@@ -157,12 +157,12 @@ export const Liquors: Liqour[] = [
   {
     name: 'Frangelico',
     type: LiqourType.LIQUEUR,
-    tags: ['sweet', 'nutty'],
+    tags: ['sweet', 'nutty', 'herbal'],
   },
   {
     name: 'Amaretto',
     type: LiqourType.LIQUEUR,
-    tags: ['sweet', 'nutty'],
+    tags: ['sweet', 'nutty', 'herbal'],
   },
   {
     name: 'Sloe Gin',
@@ -277,7 +277,7 @@ export const Liquors: Liqour[] = [
   {
     name: 'Averna',
     type: LiqourType.AMARO,
-    tags: ['bitter', 'herbal'],
+    tags: ['bitter', 'herbal', 'dark'],
   },
   {
     name: 'Cynar',

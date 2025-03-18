@@ -1,0 +1,89 @@
+<div
+  class="chat-container ctl-bg-gray-50 ctl-rounded-lg ctl-shadow-md ctl-p-4 ctl-max-w-2xl ctl-mx-auto ctl-h-[600px] ctl-flex ctl-flex-col"
+>
+  <h2 class="ctl-text-xl ctl-font-bold ctl-mb-4 ctl-text-center">Liquor Recommendation Assistant</h2>
+
+  <!-- Chat messages -->
+  <div #chatContainer class="ctl-flex-1 ctl-overflow-y-auto ctl-mb-4 ctl-space-y-4 ctl-p-2">
+    @for (message of store.messages(); track message.id) {
+      <div [class.ctl-ml-auto]="message.sender === 'user'" class="ctl-max-w-[80%]">
+        <div
+          [class]="
+            message.sender === 'user'
+              ? 'ctl-bg-blue-100 ctl-text-blue-900 ctl-p-3 ctl-rounded-lg'
+              : 'ctl-bg-white ctl-border ctl-border-gray-200 ctl-p-3 ctl-rounded-lg'
+          "
+        >
+          <p>{{ message.text }}</p>
+
+          <!-- Recommendations -->
+          @if (message.recommendations && message.recommendations.length > 0) {
+            <div class="ctl-mt-3">
+              <h4 class="ctl-font-medium ctl-text-gray-700 ctl-mb-2">Recommendations:</h4>
+              <ul class="ctl-list-disc ctl-pl-5 ctl-space-y-2">
+                @for (liquor of message.recommendations; track liquor.name) {
+                  <li class="ctl-mb-2">
+                    <div class="ctl-font-medium">{{ liquor.name }}</div>
+                    <div class="ctl-text-sm ctl-text-gray-600">Type: {{ liquor.type.toLowerCase() }}</div>
+                    <div class="ctl-text-sm ctl-text-gray-600">Characteristics: {{ liquor.tags.join(', ') }}</div>
+                  </li>
+                }
+              </ul>
+
+              <!-- Reasoning and confidence (for debugging) -->
+              @if (message.reasoning) {
+                <div class="ctl-mt-2 ctl-text-xs ctl-text-gray-500 ctl-italic">
+                  <p>Reasoning: {{ message.reasoning }}</p>
+                  @if (message.confidence !== undefined) {
+                    <p>
+                      Confidence: {{ getConfidenceLabel(message.confidence) }} ({{
+                        (message.confidence * 100).toFixed(0)
+                      }}%)
+                    </p>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Loading indicator -->
+    @if (store.isLoading()) {
+      <div class="ctl-flex ctl-items-center ctl-space-x-2">
+        <div class="ctl-w-2 ctl-h-2 ctl-bg-gray-400 ctl-rounded-full ctl-animate-bounce"></div>
+        <div
+          class="ctl-w-2 ctl-h-2 ctl-bg-gray-400 ctl-rounded-full ctl-animate-bounce"
+          style="animation-delay: 0.2s"
+        ></div>
+        <div
+          class="ctl-w-2 ctl-h-2 ctl-bg-gray-400 ctl-rounded-full ctl-animate-bounce"
+          style="animation-delay: 0.4s"
+        ></div>
+      </div>
+    }
+  </div>
+
+  <!-- Input form -->
+  <form (ngSubmit)="sendMessage()" class="ctl-flex ctl-items-center">
+    <label for="chat-input" class="ctl-sr-only">Enter your message</label>
+    <input
+      id="chat-input"
+      type="text"
+      [value]="store.userInput()"
+      (input)="updateInput($event)"
+      class="ctl-flex-1 ctl-p-2 ctl-border ctl-border-gray-300 ctl-rounded-l-md ctl-focus:outline-none ctl-focus:ring-2 ctl-focus:ring-blue-500"
+      placeholder="Tell me about your taste preferences..."
+      aria-label="Your message"
+    />
+    <button
+      type="submit"
+      class="ctl-bg-blue-600 ctl-text-white ctl-p-2 ctl-rounded-r-md ctl-hover:bg-blue-700 ctl-focus:outline-none ctl-focus:ring-2 ctl-focus:ring-blue-500"
+      [disabled]="store.isLoading() || !store.userInput().trim()"
+      aria-label="Send message"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+  </form>
+</div>
