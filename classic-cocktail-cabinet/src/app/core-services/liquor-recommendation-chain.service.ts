@@ -6,8 +6,10 @@ import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { Liqour, liquors } from '../models/recipe-book';
+import { CustomNlpProcessor } from './custom-nlp-processor';
 import { FlavorProfileEmbeddings } from './embeddings/flavor-profile-embeddings';
-import { findLiquorsByTags, getAllLiquorTypes, getAllTags } from './liquor-store';
+import { findLiquorsByTags } from './liquor-store';
+
 export interface RecommendationResult {
   recommendations: Liqour[];
   reasoning: string;
@@ -23,11 +25,14 @@ export class LiquorRecommendationAgentChainService {
   private memory: BufferMemory;
   private promptTemplate: PromptTemplate;
   private chain: RunnableSequence;
+  private nlpProcessor: CustomNlpProcessor;
 
   constructor() {
+    // Initialize the NLP processor
+    this.nlpProcessor = new CustomNlpProcessor();
+
     // Initialize in-memory vector store with custom embeddings
-    // For a real implementation, you'd want to replace FakeEmbeddings with your own embedding function
-    const embeddings = new FlavorProfileEmbeddings({});
+    const embeddings = new FlavorProfileEmbeddings();
     this.vectorStore = new MemoryVectorStore(embeddings);
 
     // Initialize conversation memory
@@ -48,8 +53,12 @@ export class LiquorRecommendationAgentChainService {
       
       Respond with structured data only.
     `);
-
-    // Create a custom chain that uses your own NLP logic instead of an LLM
+    // architecture of the chain:
+    // 1. userInput:self explanatory.
+    // 2. chat_history: not implemented but should be used for context to engine.
+    // 3. promptTemplate: this is the prompt that will be used to generate the response, currently it is only used for tags.
+    // 4. processWithAdvancedNlp: Deterministic: this is the function that will be used to process the input with the advanced NLP processor.
+    // The primary event loop of the chain is provideRecommendations which invokes the chain and returns a response.
     this.chain = RunnableSequence.from([
       {
         userInput: (input) => input.userInput,
@@ -59,8 +68,13 @@ export class LiquorRecommendationAgentChainService {
         },
       },
       this.promptTemplate,
-      // Instead of an LLM, use your own custom processor
-      (prompt) => this.customNlpProcessor(prompt),
+      // Extract text from prompt output
+      (promptOutput) => {
+        if (typeof promptOutput === 'string') return promptOutput;
+        return promptOutput.text || promptOutput.value || JSON.stringify(promptOutput);
+      },
+      // Use the advanced NLP processor instead of the simple one
+      (promptText) => this.processWithAdvancedNlp(promptText),
       new StringOutputParser(),
     ]);
 
@@ -70,10 +84,8 @@ export class LiquorRecommendationAgentChainService {
 
   private initializeVectorStore(): void {
     // Add your liquor data to the vector store
-    // This would involve creating embeddings for each liquor's description/tags
-    // For demonstration purposes, we're using placeholder code
     const allLiquors = [...liquors];
-
+    // vector store is deterministic for now.
     allLiquors.forEach((liquor) => {
       const document = {
         pageContent: `${liquor.name}: Tags: ${liquor.tags.join(', ')}`,
@@ -84,61 +96,23 @@ export class LiquorRecommendationAgentChainService {
     });
   }
 
-  private customNlpProcessor(prompt: any): any {
-    // This is where you'd implement your own NLP logic
-    // Parse the prompt to extract user preferences
-    console.log('customNlpProcessor', prompt);
-    console.log('prompt type', typeof prompt);
-    const promptText = typeof prompt === 'string' ? prompt : prompt.text || prompt.value || JSON.stringify(prompt);
-    const preferredTypes = this.extractLiquorTypes(promptText);
-    const preferredTags = this.extractPreferredTags(promptText);
-    const avoidedTags = this.extractAvoidedTags(promptText);
+  private processWithAdvancedNlp(promptText: string): string {
+    console.log('Processing with advanced NLP:', promptText);
 
+    // Use the CustomNlpProcessor to process the input
+    //TODO: enhance this to parse and statements and correctly add negations.
+    // Also ensure it handles extra tags and types including fuzzy matches.
+    const nlpResult = this.nlpProcessor.processInput(promptText);
+
+    // Convert the result to a string for the LangChain pipeline
     return JSON.stringify({
-      preferredTypes,
-      preferredTags,
-      avoidedTags,
-      reasoning: 'Based on keyword analysis of user input',
-      confidence: this.calculateConfidence(preferredTypes, preferredTags),
+      preferredTypes: nlpResult.liquorTypes,
+      preferredTags: nlpResult.keywords,
+      avoidedTags: nlpResult.negativeKeywords,
+      reasoning: nlpResult.reasoning,
+      confidence: nlpResult.confidence,
+      responseTemplate: nlpResult.responseTemplate,
     });
-  }
-
-  private extractLiquorTypes(text: string): string[] {
-    // Simple keyword extraction for liquor types
-    const types = getAllLiquorTypes();
-    return types.filter((type) => text.toLowerCase().includes(type));
-  }
-
-  private extractPreferredTags(text: string): string[] {
-    // Extract preferred flavor tags
-    const flavorTags = getAllTags();
-    return flavorTags.filter((tag) => {
-      // Look for positive associations
-      return (
-        text.toLowerCase().includes(`like ${tag}`) ||
-        text.toLowerCase().includes(`enjoy ${tag}`) ||
-        text.toLowerCase().includes(`prefer ${tag}`)
-      );
-    });
-  }
-
-  private extractAvoidedTags(text: string): string[] {
-    // Extract avoided flavor tags
-    const flavorTags = getAllTags();
-    return flavorTags.filter((tag) => {
-      // Look for negative associations
-      return (
-        text.toLowerCase().includes(`don't like ${tag}`) ||
-        text.toLowerCase().includes(`dislike ${tag}`) ||
-        text.toLowerCase().includes(`avoid ${tag}`)
-      );
-    });
-  }
-
-  private calculateConfidence(types: string[], tags: string[]): number {
-    // Simple confidence calculation based on how many preferences were identified
-    const totalIdentified = types.length + tags.length;
-    return Math.min(0.3 + totalIdentified * 0.15, 0.95);
   }
 
   public async getRecommendations(userInput: string): Promise<RecommendationResult> {
@@ -153,11 +127,11 @@ export class LiquorRecommendationAgentChainService {
 
     // Get recommendations based on semantic search if available
     let recommendations: Liqour[] = [];
-    console.log('nlpResult', nlpResult.preferredTags);
+    console.log('nlpResult', nlpResult);
     if (nlpResult.preferredTags.length > 0) {
       // Try semantic search first
       const searchQuery = nlpResult.preferredTags.join(' ');
-      const vectorResults = await this.vectorStore.similaritySearch(searchQuery, 5);
+      const vectorResults = await this.vectorStore.similaritySearch(searchQuery, 10);
 
       if (vectorResults.length > 0) {
         console.log('vectorResults', vectorResults);
@@ -172,33 +146,38 @@ export class LiquorRecommendationAgentChainService {
       }
     }
 
-    // Apply additional filtering logic from your original implementation
-    // ... existing code for filtering by type, avoiding tags, etc. ...
+    // Apply additional filtering logic
+    // Filter by type if specified
+    if (nlpResult.preferredTypes && nlpResult.preferredTypes.length > 0) {
+      recommendations = recommendations.filter((liquor) => nlpResult.preferredTypes.includes(liquor.type));
+    }
+
+    // Remove items with avoided tags
+    if (nlpResult.avoidedTags && nlpResult.avoidedTags.length > 0) {
+      recommendations = recommendations.filter(
+        (liquor) => !liquor.tags.some((tag) => nlpResult.avoidedTags.includes(tag)),
+      );
+    }
+
+    // If no recommendations, try using common tags
+    if (recommendations.length === 0) {
+      const commonTags = ['sweet', 'smooth', 'warm'];
+      recommendations = findLiquorsByTags(commonTags);
+    }
+
+    // Limit to top 5 recommendations
+    recommendations = recommendations.slice(0, 10);
 
     return {
       recommendations,
       reasoning: nlpResult.reasoning,
       confidence: nlpResult.confidence,
-      response: this.formatResponse(nlpResult),
+      response: this.nlpProcessor.formatResponse(nlpResult),
     };
   }
 
   private getLiquorsByIds(ids: string[]): Liqour[] {
-    // Implementation depends on how your liquor data is stored
-    // This is a placeholder
+    console.log('getLiquorsByIds', ids);
     return liquors.filter((liquor) => ids.includes(liquor.name));
-  }
-
-  private formatResponse(nlpResult: any): string {
-    // Format a natural language response based on the NLP results
-    if (nlpResult.preferredTypes.length > 0 && nlpResult.preferredTags.length > 0) {
-      return `I've found some ${nlpResult.preferredTypes.join('/')} options with ${nlpResult.preferredTags.join(', ')} characteristics that you might enjoy.`;
-    } else if (nlpResult.preferredTags.length > 0) {
-      return `Based on your preference for ${nlpResult.preferredTags.join(', ')} flavors, here are some recommendations.`;
-    } else if (nlpResult.preferredTypes.length > 0) {
-      return `Here are some quality ${nlpResult.preferredTypes.join('/')} options you might enjoy.`;
-    } else {
-      return `Here are some popular options that many people enjoy.`;
-    }
   }
 }

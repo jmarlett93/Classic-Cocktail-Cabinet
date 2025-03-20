@@ -1,269 +1,576 @@
 import { Embeddings } from '@langchain/core/embeddings';
 
 export class FlavorProfileEmbeddings extends Embeddings {
-  // Expanded flavor dimensions to match your liquor tags
-  //   private flavorDimensions = [
-  //     'sweet',
-  //     'sour',
-  //     'bitter',
-  //     'salty',
-  //     'umami',
-  //     'citrus',
-  //     'stone fruit',
-  //     'tropical fruit',
-  //     'red berry',
-  //     'black berry',
-  //     'dried fruit',
-  //     'apple/pear',
-  //     'melon',
-  //     'grape',
-  //     'rose',
-  //     'violet',
-  //     'jasmine',
-  //     'lavender',
-  //     'orange blossom',
-  //     'honeysuckle',
-  //     'black pepper',
-  //     'white pepper',
-  //     'cinnamon',
-  //     'nutmeg',
-  //     'clove',
-  //     'cardamom',
-  //     'star anise',
-  //     'licorice',
-  //     'ginger',
-  //     'saffron',
-  //     'coriander',
-  //     'basil',
-  //     'mint',
-  //     'thyme',
-  //     'oregano',
-  //     'rosemary',
-  //     'dill',
-  //     'eucalyptus',
-  //     'mushroom',
-  //     'truffle',
-  //     'forest floor',
-  //     'wet leaves',
-  //     'fresh cut grass',
-  //     'hay',
-  //     'olive',
-  //     'tobacco',
-  //     'leather',
-  //     'almond',
-  //     'hazelnut',
-  //     'walnut',
-  //     'pecan',
-  //     'peanut',
-  //     'roasted coffee',
-  //     'dark chocolate',
-  //     'milk chocolate',
-  //     'caramelized sugar',
-  //     'toffee',
-  //     'butterscotch',
-  //     'butter',
-  //     'cream',
-  //     'yogurt',
-  //     'cheese',
-  //     'vanilla',
-  //     'oak',
-  //     'toasted oak',
-  //     'smoke',
-  //     'cedar',
-  //     'sandalwood',
-  //     'charred wood',
-  //     'bourbon barrel',
-  //     'bread dough',
-  //     'brioche',
-  //     'sourdough',
-  //     'beer-like yeast',
-  //     'vinegar',
-  //     'chalky',
-  //     'slate',
-  //     'flint',
-  //     'saline',
-  //     'iron',
-  //     'copper',
-  //     'oily',
-  //     'velvety',
-  //     'creamy',
-  //     'astringent',
-  //     'tannic',
-  //     'drying',
-  //     'effervescent',
-  //     'silky',
-  //     'spicy heat',
-  //     'honey',
-  //     'maple syrup',
-  //     'smoke',
-  //     'briny',
-  //     'savory',
-  //     'marzipan',
-  //     'popcorn',
-  //     'soy sauce',
-  //     'green bell pepper',
-  //     'coconut',
-  //   ];
-  flavorDimensions: string[] = [
-    'smoky',
-    'warm',
-    'oak',
-    'complex',
-    'caramel',
-    'vanilla',
-    'spice',
+  // Expanded flavor dimensions
+  private flavorDimensions = [
     'sweet',
-    'butterscotch',
+    'smoky',
     'spicy',
-    'dry',
-    'pepper',
     'herbal',
+    'fruity',
+    'smooth',
+    'bitter',
+    'dry',
+    'strong',
+    'warm',
+    'citrus',
+    'dark',
+    'bright',
+    'floral',
+    'aromatic',
+    'complex',
+    'rich',
+    'light',
+    'nutty',
+    'creamy',
+    'vanilla',
+    'chocolate',
+    'coffee',
+    'anise',
+    'minty',
     'peaty',
     'malty',
-    'saline',
-    'dried fruit',
-    'smooth',
-    'light',
-    'honey',
-    'floral',
-    'fruit',
+    'oak',
+    'vegetal',
+    'earthy',
+    'berry',
+    'melon',
+    'cherry',
+    'orange',
+    'lemon',
+    'lime',
+    'grapefruit',
     'juniper',
     'botanical',
-    'citrus',
     'neutral',
-    'clean',
-    'mineral',
-    'rich',
-    'molasses',
-    'caramelized sugar',
-    'earthy',
-    'briny',
-    'vegetal',
-    'nutty',
-    'strong',
-    'anise',
-    'bitter',
-    'aromatic',
-    'hot',
-    'orange',
-    'berry',
     'syrupy',
-    'minty',
-    'chocolate',
-    'creamy',
-    'cherry',
-    'bright',
-    'artichoke',
-    'dark',
+    'honey',
+    'caramel',
+    'toffee',
+    'zesty',
+    'refreshing',
+    'crisp',
+    'clean',
+    'sharp',
+    'tangy',
+    'tart',
+    'sour',
+    'woody',
+    'grassy',
+    'peppery',
+    'cinnamon',
+    'clove',
+    'ginger',
+    'tropical',
+    'coconut',
+    'pineapple',
+    'banana',
+    'apple',
+    'pear',
+    'stone fruit',
+    'apricot',
+    'peach',
+    'plum',
   ];
 
-  // Enhanced map of terms to their flavor profile scores
-  flavorProfiles: Record<string, Record<string, number>> = {
-    // Spirits
-    whiskey: { smoky: 0.6, warm: 0.7, oak: 0.6, complex: 0.5, caramel: 0.5, vanilla: 0.4, spice: 0.4 },
-    bourbon: { sweet: 0.7, warm: 0.8, oak: 0.7, vanilla: 0.6, caramel: 0.6, spice: 0.5, butterscotch: 0.4 },
-    'rye whiskey': { spicy: 0.8, warm: 0.7, dry: 0.5, pepper: 0.6, herbal: 0.5, oak: 0.4 },
-    scotch: { smoky: 0.8, peaty: 0.7, complex: 0.8, malty: 0.6, oak: 0.5, saline: 0.4, 'dried fruit': 0.4 },
-    'irish whiskey': { smooth: 0.8, warm: 0.6, light: 0.5, honey: 0.5, floral: 0.4, fruit: 0.4 },
-    gin: { herbal: 0.8, juniper: 0.9, botanical: 0.8, dry: 0.7, citrus: 0.6, floral: 0.5, spice: 0.4 },
-    vodka: { neutral: 0.9, smooth: 0.7, light: 0.8, clean: 0.6, mineral: 0.5 },
-    rum: { sweet: 0.7, warm: 0.6, rich: 0.5, molasses: 0.7, 'caramelized sugar': 0.6, spice: 0.5, vanilla: 0.4 },
-    tequila: { herbal: 0.6, spicy: 0.7, earthy: 0.5, citrus: 0.5, pepper: 0.5, briny: 0.4 },
-    mezcal: { smoky: 0.9, herbal: 0.6, earthy: 0.7, vegetal: 0.5, pepper: 0.5, citrus: 0.4 },
-    brandy: { sweet: 0.6, warm: 0.7, fruity: 0.5, 'dried fruit': 0.6, caramel: 0.5, vanilla: 0.4, nutty: 0.4 },
-    cognac: { sweet: 0.6, warm: 0.7, rich: 0.8, complex: 0.7, 'dried fruit': 0.6, floral: 0.5, spice: 0.5 },
-    pisco: { fruity: 0.8, herbal: 0.5, floral: 0.6, citrus: 0.5, light: 0.4, smooth: 0.4 },
-    absinthe: { herbal: 0.9, strong: 0.9, anise: 0.8, bitter: 0.6, spice: 0.5, citrus: 0.4 },
-
-    // Vermouth
-    'dry vermouth': { dry: 0.8, herbal: 0.7, aromatic: 0.7, floral: 0.5, bitter: 0.4, light: 0.6, citrus: 0.5 },
-    'sweet vermouth': {
-      sweet: 0.7,
-      herbal: 0.6,
-      aromatic: 0.7,
-      rich: 0.6,
-      complex: 0.6,
-      spicy: 0.5,
-      'dried fruit': 0.4,
+  // Enhanced semantic relationships between terms
+  private semanticRelationships: Record<string, Record<string, number>> = {
+    // Citrus family
+    citrus: {
+      lemon: 0.9,
+      lime: 0.9,
+      orange: 0.9,
+      grapefruit: 0.8,
+      zesty: 0.8,
+      bright: 0.7,
+      tangy: 0.7,
+      tart: 0.6,
+      refreshing: 0.6,
+      crisp: 0.5,
+      sour: 0.5,
+    },
+    lemon: {
+      citrus: 0.9,
+      lime: 0.8,
+      zesty: 0.9,
+      bright: 0.8,
+      tart: 0.7,
+      sour: 0.6,
+      refreshing: 0.7,
+    },
+    lime: {
+      citrus: 0.9,
+      lemon: 0.8,
+      zesty: 0.9,
+      bright: 0.8,
+      tart: 0.7,
+      sour: 0.6,
+      refreshing: 0.7,
+    },
+    orange: {
+      citrus: 0.9,
+      sweet: 0.6,
+      zesty: 0.7,
+      bright: 0.7,
+      fruity: 0.6,
+    },
+    grapefruit: {
+      citrus: 0.8,
+      bitter: 0.6,
+      tart: 0.7,
+      zesty: 0.7,
+      refreshing: 0.6,
     },
 
-    // Liqueurs
-    'green chartreuse': { herbal: 0.9, hot: 0.7, sweet: 0.5, complex: 0.8, spice: 0.6, earthy: 0.5 },
-    'grand marnier': { sweet: 0.7, citrus: 0.8, orange: 0.9, smooth: 0.7, complex: 0.6, spice: 0.5 },
-    'triple sec': { sweet: 0.7, citrus: 0.9, orange: 0.8, floral: 0.5, light: 0.4 },
-    'sloe gin': { sweet: 0.7, fruity: 0.8, berry: 0.7, spice: 0.4 },
-    'blue curacao': { sweet: 0.8, citrus: 0.7, orange: 0.7, floral: 0.5 },
-    'creme de cassis': { sweet: 0.9, berry: 0.9, rich: 0.5, syrupy: 0.5 },
-    'creme de menthe': { sweet: 0.7, minty: 0.9, herbal: 0.5 },
-    'creme de cacao': { sweet: 0.8, chocolate: 0.9, vanilla: 0.5, creamy: 0.5 },
-    maraschino: { sweet: 0.8, cherry: 0.9, floral: 0.5 },
+    // Bright/refreshing cluster
+    bright: {
+      refreshing: 0.8,
+      crisp: 0.8,
+      clean: 0.7,
+      light: 0.7,
+      citrus: 0.7,
+      zesty: 0.8,
+    },
+    refreshing: {
+      bright: 0.8,
+      crisp: 0.9,
+      clean: 0.8,
+      light: 0.8,
+      citrus: 0.6,
+      zesty: 0.7,
+    },
+    crisp: {
+      refreshing: 0.9,
+      clean: 0.8,
+      light: 0.7,
+      bright: 0.8,
+      dry: 0.6,
+    },
+    zesty: {
+      citrus: 0.8,
+      lemon: 0.9,
+      lime: 0.9,
+      bright: 0.8,
+      tangy: 0.8,
+      refreshing: 0.7,
+    },
 
-    // Amari
-    campari: { bitter: 0.9, herbal: 0.6, bright: 0.6, citrus: 0.5 },
-    aperol: { bitter: 0.7, citrus: 0.6, bright: 0.7, sweet: 0.5 },
-    fernet: { bitter: 0.9, herbal: 0.8, minty: 0.6, spice: 0.5 },
-    cynar: { bitter: 0.8, herbal: 0.7, vegetal: 0.8, artichoke: 0.9, earthy: 0.7 },
-    averna: { bitter: 0.7, herbal: 0.6, dark: 0.7, caramel: 0.5 },
-    montenegro: { bitter: 0.6, herbal: 0.7, citrus: 0.5, floral: 0.5, spice: 0.5 },
-    nonino: { bitter: 0.6, warm: 0.7, herbal: 0.6, complex: 0.7, 'dried fruit': 0.5 },
+    // Sweet family
+    sweet: {
+      honey: 0.8,
+      caramel: 0.8,
+      vanilla: 0.7,
+      syrupy: 0.8,
+      toffee: 0.7,
+      fruity: 0.6,
+      rich: 0.6,
+    },
+    honey: {
+      sweet: 0.8,
+      floral: 0.6,
+      rich: 0.5,
+      smooth: 0.5,
+    },
+    caramel: {
+      sweet: 0.8,
+      toffee: 0.9,
+      rich: 0.7,
+      warm: 0.6,
+      smooth: 0.5,
+    },
+    vanilla: {
+      sweet: 0.7,
+      creamy: 0.7,
+      smooth: 0.6,
+      warm: 0.5,
+    },
+
+    // Fruity family
+    fruity: {
+      berry: 0.8,
+      tropical: 0.8,
+      apple: 0.7,
+      pear: 0.7,
+      'stone fruit': 0.7,
+      cherry: 0.7,
+      sweet: 0.6,
+      bright: 0.5,
+    },
+    berry: {
+      fruity: 0.8,
+      sweet: 0.6,
+      tart: 0.5,
+      bright: 0.5,
+    },
+    tropical: {
+      fruity: 0.8,
+      coconut: 0.8,
+      pineapple: 0.9,
+      banana: 0.8,
+      sweet: 0.6,
+      bright: 0.5,
+    },
+
+    // Herbal family
+    herbal: {
+      botanical: 0.9,
+      grassy: 0.7,
+      vegetal: 0.7,
+      earthy: 0.6,
+      minty: 0.6,
+      juniper: 0.6,
+      aromatic: 0.7,
+    },
+    botanical: {
+      herbal: 0.9,
+      juniper: 0.8,
+      aromatic: 0.8,
+      complex: 0.6,
+    },
+    juniper: {
+      botanical: 0.8,
+      herbal: 0.6,
+      pine: 0.7,
+      dry: 0.5,
+    },
+
+    // Spicy family
+    spicy: {
+      peppery: 0.8,
+      cinnamon: 0.8,
+      clove: 0.8,
+      ginger: 0.7,
+      warm: 0.7,
+      aromatic: 0.6,
+    },
+    peppery: {
+      spicy: 0.8,
+      sharp: 0.7,
+      warm: 0.6,
+    },
+
+    // Smoky family
+    smoky: {
+      peaty: 0.9,
+      woody: 0.7,
+      oak: 0.6,
+      complex: 0.5,
+      warm: 0.5,
+    },
+    peaty: {
+      smoky: 0.9,
+      earthy: 0.7,
+      complex: 0.6,
+    },
+
+    // Rich/complex family
+    rich: {
+      complex: 0.8,
+      deep: 0.8,
+      smooth: 0.6,
+      sweet: 0.5,
+      dark: 0.6,
+    },
+    complex: {
+      rich: 0.8,
+      layered: 0.9,
+      deep: 0.8,
+      aromatic: 0.6,
+    },
   };
 
+  // Enhanced map of terms to their flavor profile scores
+  private flavorProfiles: Record<string, Record<string, number>> = {
+    // Whiskey profiles
+    bourbon: {
+      sweet: 0.8,
+      vanilla: 0.7,
+      caramel: 0.8,
+      oak: 0.7,
+      warm: 0.8,
+      smooth: 0.6,
+      rich: 0.7,
+    },
+    scotch: {
+      smoky: 0.7,
+      peaty: 0.6,
+      complex: 0.8,
+      warm: 0.7,
+      oak: 0.6,
+      dry: 0.6,
+    },
+    rye: {
+      spicy: 0.8,
+      peppery: 0.7,
+      dry: 0.7,
+      warm: 0.6,
+      complex: 0.6,
+    },
+    'irish whiskey': {
+      smooth: 0.8,
+      light: 0.6,
+      fruity: 0.5,
+      malty: 0.7,
+      warm: 0.6,
+    },
+
+    // Gin profiles
+    gin: {
+      juniper: 0.9,
+      botanical: 0.9,
+      herbal: 0.8,
+      citrus: 0.6,
+      dry: 0.7,
+      crisp: 0.6,
+    },
+    'london dry gin': {
+      juniper: 0.9,
+      dry: 0.8,
+      botanical: 0.8,
+      citrus: 0.5,
+      sharp: 0.6,
+    },
+    'botanical gin': {
+      botanical: 0.9,
+      herbal: 0.8,
+      floral: 0.7,
+      complex: 0.7,
+      aromatic: 0.8,
+    },
+    'citrus gin': {
+      citrus: 0.9,
+      lemon: 0.7,
+      orange: 0.7,
+      bright: 0.8,
+      refreshing: 0.7,
+      juniper: 0.6,
+    },
+
+    // Rum profiles
+    rum: {
+      sweet: 0.7,
+      caramel: 0.6,
+      tropical: 0.6,
+      smooth: 0.6,
+      warm: 0.5,
+    },
+    'dark rum': {
+      rich: 0.8,
+      caramel: 0.8,
+      molasses: 0.8,
+      sweet: 0.7,
+      complex: 0.6,
+      warm: 0.6,
+    },
+    'spiced rum': {
+      spicy: 0.8,
+      vanilla: 0.7,
+      caramel: 0.6,
+      cinnamon: 0.7,
+      warm: 0.7,
+    },
+    'white rum': {
+      light: 0.8,
+      clean: 0.7,
+      sweet: 0.5,
+      tropical: 0.5,
+      smooth: 0.6,
+    },
+
+    // Vodka profiles
+    vodka: {
+      neutral: 0.9,
+      clean: 0.8,
+      smooth: 0.7,
+      crisp: 0.6,
+    },
+    'flavored vodka': {
+      fruity: 0.7,
+      sweet: 0.6,
+      smooth: 0.6,
+      light: 0.6,
+    },
+
+    // Tequila profiles
+    tequila: {
+      earthy: 0.7,
+      vegetal: 0.6,
+      peppery: 0.5,
+      citrus: 0.4,
+      smooth: 0.5,
+    },
+    'reposado tequila': {
+      oak: 0.6,
+      vanilla: 0.5,
+      caramel: 0.5,
+      smooth: 0.7,
+      earthy: 0.6,
+    },
+    'añejo tequila': {
+      oak: 0.8,
+      vanilla: 0.7,
+      caramel: 0.7,
+      rich: 0.7,
+      smooth: 0.8,
+      complex: 0.7,
+    },
+
+    // Liqueur profiles
+    'orange liqueur': {
+      orange: 0.9,
+      citrus: 0.8,
+      sweet: 0.8,
+      bright: 0.6,
+      zesty: 0.7,
+    },
+    'coffee liqueur': {
+      coffee: 0.9,
+      sweet: 0.7,
+      rich: 0.7,
+      dark: 0.8,
+    },
+    'herbal liqueur': {
+      herbal: 0.9,
+      botanical: 0.8,
+      complex: 0.7,
+      bitter: 0.6,
+      aromatic: 0.8,
+    },
+    'cream liqueur': {
+      creamy: 0.9,
+      sweet: 0.8,
+      smooth: 0.8,
+      vanilla: 0.6,
+      rich: 0.6,
+    },
+
+    // Amaro profiles
+    amaro: {
+      bitter: 0.9,
+      herbal: 0.8,
+      complex: 0.8,
+      sweet: 0.5,
+      aromatic: 0.7,
+    },
+  };
+
+  constructor() {
+    super({});
+  }
+
   async embedDocuments(documents: string[]): Promise<number[][]> {
-    return documents.map((doc) => this.createFlavorEmbedding(doc));
+    return Promise.all(documents.map((doc) => this.embedQuery(doc)));
   }
 
   async embedQuery(text: string): Promise<number[]> {
-    return this.createFlavorEmbedding(text);
-  }
-
-  private createFlavorEmbedding(text: string): number[] {
     const lowerText = text.toLowerCase();
+
+    // Initialize embedding with zeros for each dimension
     const embedding = Array(this.flavorDimensions.length).fill(0);
 
-    // Check for direct flavor mentions
-    this.flavorDimensions.forEach((flavor, index) => {
-      if (lowerText.includes(flavor)) {
-        embedding[index] =
-          lowerText.includes(`not ${flavor}`) || lowerText.includes(`don't like ${flavor}`) ? -0.7 : 0.8;
-      }
-    });
+    // Extract liquor type if present
+    let detectedType = '';
+    const typePatterns = [
+      { pattern: /whiskey|bourbon|scotch|rye/i, type: 'whiskey' },
+      { pattern: /gin/i, type: 'gin' },
+      { pattern: /rum/i, type: 'rum' },
+      { pattern: /vodka/i, type: 'vodka' },
+      { pattern: /tequila|mezcal/i, type: 'tequila' },
+      { pattern: /liqueur|cordial/i, type: 'liqueur' },
+      { pattern: /amaro|bitter/i, type: 'amaro' },
+    ];
 
-    // Add flavor profiles from known terms
-    Object.keys(this.flavorProfiles).forEach((term) => {
-      if (lowerText.includes(term)) {
-        const profile = this.flavorProfiles[term];
-        this.flavorDimensions.forEach((flavor, index) => {
-          if (profile[flavor]) {
-            embedding[index] += profile[flavor];
+    for (const { pattern, type } of typePatterns) {
+      if (pattern.test(lowerText)) {
+        detectedType = type;
+        break;
+      }
+    }
+
+    // Process each word in the text
+    const words = lowerText.split(/\s+/);
+
+    // First pass: direct dimension matching
+    words.forEach((word) => {
+      // Check for negation
+      const isNegated =
+        words.indexOf(word) > 0 &&
+        (words[words.indexOf(word) - 1] === 'not' ||
+          words[words.indexOf(word) - 1] === 'no' ||
+          words[words.indexOf(word) - 1].endsWith("n't"));
+
+      // Check if word is a flavor dimension
+      const dimIndex = this.flavorDimensions.indexOf(word);
+      if (dimIndex >= 0) {
+        embedding[dimIndex] += isNegated ? -1.0 : 1.0;
+      }
+
+      // Check if word is in flavor profiles
+      if (this.flavorProfiles[word]) {
+        const profile = this.flavorProfiles[word];
+        Object.entries(profile).forEach(([flavor, value]) => {
+          const flavorIndex = this.flavorDimensions.indexOf(flavor);
+          if (flavorIndex >= 0) {
+            embedding[flavorIndex] += isNegated ? -value : value;
           }
         });
       }
     });
 
-    // Check for liquor types
-    const liquorTypes = ['whiskey', 'spirit', 'liqueur', 'amaro', 'bitters'];
-    liquorTypes.forEach((type) => {
-      if (lowerText.includes(type)) {
-        // Boost dimensions commonly associated with this type
-        switch (type) {
-          case 'whiskey':
-            this.boostDimensions(embedding, ['warm', 'oak', 'smoky'], 0.4);
-            break;
-          case 'spirit':
-            this.boostDimensions(embedding, ['strong', 'smooth'], 0.3);
-            break;
-          case 'liqueur':
-            this.boostDimensions(embedding, ['sweet', 'syrupy'], 0.4);
-            break;
-          case 'amaro':
-            this.boostDimensions(embedding, ['bitter', 'herbal', 'complex'], 0.4);
-            break;
-          case 'bitters':
-            this.boostDimensions(embedding, ['bitter', 'aromatic', 'strong'], 0.5);
-            break;
-        }
+    // Second pass: semantic relationships
+    words.forEach((word) => {
+      // Check for negation
+      const isNegated =
+        words.indexOf(word) > 0 &&
+        (words[words.indexOf(word) - 1] === 'not' ||
+          words[words.indexOf(word) - 1] === 'no' ||
+          words[words.indexOf(word) - 1].endsWith("n't"));
+
+      // Apply semantic relationships
+      if (this.semanticRelationships[word]) {
+        const relationships = this.semanticRelationships[word];
+        Object.entries(relationships).forEach(([relatedTerm, strength]) => {
+          const relatedIndex = this.flavorDimensions.indexOf(relatedTerm);
+          if (relatedIndex >= 0) {
+            embedding[relatedIndex] += isNegated ? -strength * 0.5 : strength * 0.5;
+          }
+        });
       }
     });
+
+    // Apply type-specific boosts
+    if (detectedType) {
+      switch (detectedType) {
+        case 'whiskey':
+          this.boostDimensions(embedding, ['warm', 'oak', 'smoky', 'rich'], 0.4);
+          break;
+        case 'gin':
+          this.boostDimensions(embedding, ['juniper', 'botanical', 'crisp'], 0.4);
+          break;
+        case 'rum':
+          this.boostDimensions(embedding, ['sweet', 'tropical', 'smooth'], 0.4);
+          break;
+        case 'vodka':
+          this.boostDimensions(embedding, ['neutral', 'clean', 'smooth'], 0.4);
+          break;
+        case 'tequila':
+          this.boostDimensions(embedding, ['earthy', 'vegetal', 'citrus'], 0.4);
+          break;
+        case 'liqueur':
+          this.boostDimensions(embedding, ['sweet', 'syrupy', 'rich'], 0.4);
+          break;
+        case 'amaro':
+          this.boostDimensions(embedding, ['bitter', 'herbal', 'complex'], 0.4);
+          break;
+      }
+    }
+
+    // Process phrases
+    this.processPhrase(lowerText, 'refreshing citrus', ['refreshing', 'citrus', 'bright', 'zesty', 'crisp'], embedding);
+    this.processPhrase(lowerText, 'not too sweet', ['sweet', 'syrupy'], embedding, true);
+    this.processPhrase(lowerText, 'smooth and easy', ['smooth', 'light', 'clean'], embedding);
+    this.processPhrase(lowerText, 'rich and complex', ['rich', 'complex', 'deep'], embedding);
+    this.processPhrase(lowerText, 'fruity and sweet', ['fruity', 'sweet', 'tropical'], embedding);
 
     // Normalize the embedding
     const magnitude = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
@@ -281,5 +588,27 @@ export class FlavorProfileEmbeddings extends Embeddings {
         embedding[index] += factor;
       }
     });
+  }
+
+  private processPhrase(
+    text: string,
+    phrase: string,
+    dimensions: string[],
+    embedding: number[],
+    negate: boolean = false,
+  ): void {
+    if (text.includes(phrase)) {
+      dimensions.forEach((dim) => {
+        const index = this.flavorDimensions.indexOf(dim);
+        if (index >= 0) {
+          embedding[index] += negate ? -0.7 : 0.7;
+        }
+      });
+    }
+  }
+
+  // Add a getter method to expose the flavor dimensions
+  public getFlavorDimensions(): string[] {
+    return [...this.flavorDimensions];
   }
 }

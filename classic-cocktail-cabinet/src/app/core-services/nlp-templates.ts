@@ -14,10 +14,10 @@ export interface NlpTemplate {
 export const tasteTags = {
   sweet: ['sweet', 'sugary', 'syrupy', 'honey', 'dessert'],
   bitter: ['bitter', 'bitterness', 'not sweet'],
-  herbal: ['herbal', 'herbs', 'botanical', 'plant', 'grassy'],
+  herbal: ['herbal', 'herbs', 'botanical', 'plant', 'grassy', 'pine'],
   citrus: ['citrus', 'lemon', 'lime', 'orange', 'grapefruit', 'zesty'],
   smoky: ['smoky', 'smoke', 'campfire', 'burnt', 'charred'],
-  spicy: ['spicy', 'spice', 'hot', 'peppery', 'cinnamon', 'clove'],
+  spicy: ['spicy', 'spice', 'hot', 'peppery', 'cinnamon', 'clove', 'pepper'],
   fruity: ['fruity', 'fruit', 'berry', 'apple', 'pear', 'tropical'],
   floral: ['floral', 'flower', 'rose', 'lavender', 'jasmine'],
   creamy: ['creamy', 'cream', 'milk', 'dairy', 'smooth'],
@@ -27,16 +27,16 @@ export const tasteTags = {
   vanilla: ['vanilla', 'vanillin'],
   anise: ['anise', 'licorice', 'star anise'],
   minty: ['mint', 'minty', 'peppermint', 'spearmint'],
-  warm: ['warm', 'warming', 'cozy', 'comforting'],
+  warm: ['warm', 'warming', 'cozy', 'comforting', 'hot'],
   dry: ['dry', 'not sweet', 'crisp', 'brut'],
   rich: ['rich', 'full-bodied', 'robust', 'deep'],
   complex: ['complex', 'layered', 'sophisticated', 'nuanced'],
-  smooth: ['smooth', 'mellow', 'soft', 'gentle'],
+  smooth: ['smooth', 'mellow', 'soft', 'gentle', 'mild'],
 };
 
 // Define liquor type keywords
 export const liquorTypeKeywords = {
-  [LiqourType.AMARO]: ['amaro', 'bitter', 'digestif', 'aperitif'],
+  [LiqourType.AMARO]: ['amaro', 'bitter', 'digestif', 'aperitif', 'bitters'],
   [LiqourType.WHISKEY]: ['whiskey', 'whisky', 'bourbon', 'scotch', 'rye'],
   [LiqourType.SPIRIT]: ['spirit', 'vodka', 'gin', 'rum', 'tequila', 'mezcal', 'brandy', 'cognac'],
   [LiqourType.LIQUEUR]: ['liqueur', 'cordial', 'schnapps'],
