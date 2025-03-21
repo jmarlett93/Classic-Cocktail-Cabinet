@@ -114,61 +114,33 @@ export class LiquorRecommendationAgentChainService {
     });
   }
   public async getRecommendations(userInput: string): Promise<RecommendationResult> {
-    // Step 1: Extract structured preferences with NLP
+    let recommendations: Liqour[] = [];
+
+    const vectorResults = await this.vectorStore.similaritySearch(userInput, 15);
+    if (vectorResults.length > 0) {
+      const liquorIds = vectorResults.map((doc) => doc.metadata['id']);
+      recommendations = this.getLiquorsByIds(liquorIds);
+    }
+
     const result = await this.chain.invoke({ userInput });
     const nlpResult = JSON.parse(result);
 
-    // Save to memory
+    // For now memory is not used.
     await this.memory.saveContext({ input: userInput }, { output: JSON.stringify(nlpResult) });
 
-    // Step 2: Determine search strategy
-    let recommendations: Liqour[] = [];
-
-    // If user specified a liquor type, use that as a primary filter
+    // It's possible that we could improve the embeddings to include type boosts.
     if (nlpResult.preferredTypes && nlpResult.preferredTypes.length > 0) {
-      // Get all liquors of the specified type(s)
-      const typeFilteredLiquors = liquors.filter((liquor) => nlpResult.preferredTypes.includes(liquor.type));
-
-      // If we have type-filtered liquors, do semantic search within that subset
-      if (typeFilteredLiquors.length > 0) {
-        // Create a temporary vector store with just these liquors
-        const tempEmbeddings = new FlavorProfileEmbeddings();
-        const tempVectorStore = new MemoryVectorStore(tempEmbeddings);
-
-        // Add type-filtered liquors to temp store
-        await Promise.all(
-          typeFilteredLiquors.map((liquor) => {
-            return tempVectorStore.addDocuments([
-              {
-                pageContent: `${liquor.name}: Tags: ${liquor.tags.join(', ')}`,
-                metadata: { id: liquor.name, type: liquor.type, tags: liquor.tags },
-              },
-            ]);
-          }),
-        );
-
-        // Do semantic search within this filtered set
-        const vectorResults = await tempVectorStore.similaritySearch(userInput, 15);
-        if (vectorResults.length > 0) {
-          const liquorIds = vectorResults.map((doc) => doc.metadata['id']);
-          recommendations = this.getLiquorsByIds(liquorIds);
-        }
-      }
-    }
-    // If no type specified, do semantic search across all liquors
-    else {
-      const vectorResults = await this.vectorStore.similaritySearch(userInput, 15);
-      if (vectorResults.length > 0) {
-        const liquorIds = vectorResults.map((doc) => doc.metadata['id']);
-        recommendations = this.getLiquorsByIds(liquorIds);
-      }
+      const tempRecLength = recommendations.length;
+      recommendations = recommendations.filter((liquor) => nlpResult.preferredTypes.includes(liquor.type));
+      console.log('tempRecLength preferredTypes', tempRecLength, 'newRecLength', recommendations.length);
     }
 
-    // Step 3: Apply avoided tags filtering (this is still necessary)
     if (nlpResult.avoidedTags && nlpResult.avoidedTags.length > 0) {
+      const tempRecLength = recommendations.length;
       recommendations = recommendations.filter(
         (liquor) => !liquor.tags.some((tag) => nlpResult.avoidedTags.includes(tag)),
       );
+      console.log('tempRecLength avoidedTags', tempRecLength, 'newRecLength', recommendations.length);
     }
 
     // Fallbacks if needed
