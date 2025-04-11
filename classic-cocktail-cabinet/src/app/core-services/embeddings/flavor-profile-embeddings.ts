@@ -443,6 +443,13 @@ export class FlavorProfileEmbeddings extends Embeddings {
       vanilla: 0.6,
       rich: 0.6,
     },
+    'blue curacao': {
+      orange: 0.9,
+      citrus: 0.95, // Strong citrus emphasis
+      sweet: 0.7,
+      bright: 0.7,
+      tropical: 0.6,
+    },
 
     // Amaro profiles
     amaro: {
@@ -467,6 +474,30 @@ export class FlavorProfileEmbeddings extends Embeddings {
 
     // Initialize embedding with zeros for each dimension
     const embedding = Array(this.flavorDimensions.length).fill(0);
+
+    // Check for specific liquor names mentioned in the query
+    const mentionedLiquors: string[] = [];
+    Object.keys(this.flavorProfiles).forEach((liquorName) => {
+      // Create regex for exact match with word boundaries
+      const regex = new RegExp(`\\b${liquorName.toLowerCase().replace(/\s+/g, '\\s+')}\\b`);
+      if (regex.test(lowerText)) {
+        mentionedLiquors.push(liquorName);
+      }
+    });
+
+    // Apply flavor profiles from mentioned liquors with a boost
+    if (mentionedLiquors.length > 0) {
+      mentionedLiquors.forEach((liquorName) => {
+        const profile = this.flavorProfiles[liquorName];
+        Object.entries(profile).forEach(([flavor, value]) => {
+          const flavorIndex = this.flavorDimensions.indexOf(flavor);
+          if (flavorIndex >= 0) {
+            // Apply a 1.5x boost for explicitly mentioned liquors
+            embedding[flavorIndex] += value * 1.5;
+          }
+        });
+      });
+    }
 
     // Extract liquor type if present
     let detectedType = '';
@@ -497,7 +528,19 @@ export class FlavorProfileEmbeddings extends Embeddings {
         words.indexOf(word) > 0 &&
         (words[words.indexOf(word) - 1] === 'not' ||
           words[words.indexOf(word) - 1] === 'no' ||
-          words[words.indexOf(word) - 1].endsWith("n't"));
+          words[words.indexOf(word) - 1].endsWith("n't") ||
+          words[words.indexOf(word) - 1] === 'hate' ||
+          words[words.indexOf(word) - 1] === 'dislike' ||
+          words[words.indexOf(word) - 1] === 'gross' ||
+          words[words.indexOf(word) - 1] === 'bad' ||
+          words[words.indexOf(word) - 1] === 'nasty' ||
+          words[words.indexOf(word) - 1] === 'disgusting' ||
+          (words[words.indexOf(word) - 2] === 'is' &&
+            (words[words.indexOf(word) - 1] === 'gross' ||
+              words[words.indexOf(word) - 1] === 'bad' ||
+              words[words.indexOf(word) - 1] === 'nasty' ||
+              words[words.indexOf(word) - 1] === 'disgusting')) ||
+          (words[words.indexOf(word) - 2] === "don't" && words[words.indexOf(word) - 1] === 'like'));
 
       // Check if word is a flavor dimension
       const dimIndex = this.flavorDimensions.indexOf(word);
@@ -524,7 +567,19 @@ export class FlavorProfileEmbeddings extends Embeddings {
         words.indexOf(word) > 0 &&
         (words[words.indexOf(word) - 1] === 'not' ||
           words[words.indexOf(word) - 1] === 'no' ||
-          words[words.indexOf(word) - 1].endsWith("n't"));
+          words[words.indexOf(word) - 1].endsWith("n't") ||
+          words[words.indexOf(word) - 1] === 'hate' ||
+          words[words.indexOf(word) - 1] === 'dislike' ||
+          words[words.indexOf(word) - 1] === 'gross' ||
+          words[words.indexOf(word) - 1] === 'bad' ||
+          words[words.indexOf(word) - 1] === 'nasty' ||
+          words[words.indexOf(word) - 1] === 'disgusting' ||
+          (words[words.indexOf(word) - 2] === 'is' &&
+            (words[words.indexOf(word) - 1] === 'gross' ||
+              words[words.indexOf(word) - 1] === 'bad' ||
+              words[words.indexOf(word) - 1] === 'nasty' ||
+              words[words.indexOf(word) - 1] === 'disgusting')) ||
+          (words[words.indexOf(word) - 2] === "don't" && words[words.indexOf(word) - 1] === 'like'));
 
       // Apply semantic relationships
       if (this.semanticRelationships[word]) {
@@ -601,7 +656,7 @@ export class FlavorProfileEmbeddings extends Embeddings {
       dimensions.forEach((dim) => {
         const index = this.flavorDimensions.indexOf(dim);
         if (index >= 0) {
-          embedding[index] += negate ? -0.7 : 0.7;
+          embedding[index] += negate ? -0.5 : 0.5;
         }
       });
     }

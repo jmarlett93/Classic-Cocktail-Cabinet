@@ -7,7 +7,6 @@ export interface NlpTemplate {
     [key: string]: (match: string) => string[] | string | undefined;
   };
   confidence: number;
-  response: string;
 }
 
 // Define taste categories for better matching
@@ -43,36 +42,51 @@ export const liquorTypeKeywords = {
   [LiqourType.BITTERS]: ['bitters', 'aromatic'],
 };
 
+// Define intent types
+export type IntentType =
+  | 'flavor_preference'
+  | 'type_preference'
+  | 'avoidance'
+  | 'comparison'
+  | 'explanation'
+  | 'clarification'
+  | 'general_inquiry';
+
 // Helper functions for extractors
 const extractTags = (input: string): string[] => {
   const foundTags: string[] = [];
-
-  // Check for taste tags
   Object.entries(tasteTags).forEach(([tag, keywords]) => {
     if (keywords.some((keyword) => input.toLowerCase().includes(keyword))) {
       foundTags.push(tag);
     }
   });
-
   return foundTags;
 };
 
 const extractLiquorTypes = (input: string): string[] => {
   const foundTypes: string[] = [];
-
   Object.entries(liquorTypeKeywords).forEach(([type, keywords]) => {
     if (keywords.some((keyword) => input.toLowerCase().includes(keyword))) {
       foundTypes.push(type);
     }
   });
-
   return foundTypes;
 };
 
 const extractNegativeTags = (input: string): string[] => {
-  const negativeWords = ['not', "don't", 'dislike', 'hate', 'avoid', 'no'];
+  const negativeWords = [
+    'not',
+    "don't",
+    'dislike',
+    'hate',
+    'avoid',
+    'no',
+    'is gross',
+    'is bad',
+    'is nasty',
+    'is disgusting',
+  ];
   const negativePatterns = negativeWords.map((word) => new RegExp(`${word}\\s+([\\w\\s]+)`, 'gi'));
-
   let negativeTags: string[] = [];
 
   negativePatterns.forEach((pattern) => {
@@ -80,7 +94,6 @@ const extractNegativeTags = (input: string): string[] => {
     matches.forEach((match) => {
       if (match[1]) {
         const potentialTag = match[1].trim().toLowerCase();
-        // Check if this negative phrase contains any taste tags
         Object.entries(tasteTags).forEach(([tag, keywords]) => {
           if (keywords.some((keyword) => potentialTag.includes(keyword))) {
             negativeTags.push(tag);
@@ -96,7 +109,7 @@ const extractNegativeTags = (input: string): string[] => {
 // Define the NLP templates
 export const nlpTemplates: NlpTemplate[] = [
   {
-    id: 'taste_preference',
+    id: 'flavor_preference',
     pattern: [
       'i like',
       'i enjoy',
@@ -106,28 +119,20 @@ export const nlpTemplates: NlpTemplate[] = [
       'something sweet',
       'something bitter',
       'something smoky',
+      'looking for',
+      'want something',
     ],
     extractors: {
+      intent: () => 'flavor_preference',
       preferredTags: (match) => extractTags(match),
-      avoidedTags: (match) => extractNegativeTags(match),
-      preferredTypes: (match) => extractLiquorTypes(match),
+      reasoning: (match) => `I understand you're looking for drinks with ${extractTags(match).join(', ')} flavors.`,
+      response: (match) =>
+        `Based on your preference for ${extractTags(match).join(', ')}, I can recommend some options that match these flavor profiles.`,
     },
     confidence: 0.8,
-    response: 'Based on your preference for {preferredTags}, I can recommend some liquors you might enjoy.',
   },
   {
-    id: 'dislike_preference',
-    pattern: ["i don't like", 'i dislike', 'i hate', 'not a fan of', "can't stand"],
-    extractors: {
-      avoidedTags: (match) => extractTags(match),
-      preferredTags: (match) => [], // Empty by default
-      preferredTypes: (match) => extractLiquorTypes(match),
-    },
-    confidence: 0.7,
-    response: "I'll avoid recommending liquors with {avoidedTags} flavors.",
-  },
-  {
-    id: 'specific_type',
+    id: 'type_preference',
     pattern: [
       'whiskey',
       'whisky',
@@ -144,53 +149,68 @@ export const nlpTemplates: NlpTemplate[] = [
       'cognac',
     ],
     extractors: {
+      intent: () => 'type_preference',
       preferredTypes: (match) => extractLiquorTypes(match),
-      preferredTags: (match) => extractTags(match),
-      avoidedTags: (match) => extractNegativeTags(match),
+      reasoning: (match) => `You're interested in ${extractLiquorTypes(match).join(', ')}.`,
+      response: (match) =>
+        `I'll focus on ${extractLiquorTypes(match).join(', ')} options that match your taste preferences.`,
     },
     confidence: 0.9,
-    response: 'I can recommend some {preferredTypes} options for you.',
   },
   {
-    id: 'occasion',
+    id: 'avoidance',
     pattern: [
-      'for dinner',
-      'for dessert',
-      'for a party',
-      'for relaxing',
-      'after meal',
-      'before meal',
-      'digestif',
-      'aperitif',
+      "i don't like",
+      'i dislike',
+      'i hate',
+      'not a fan of',
+      "can't stand",
+      'too strong',
+      'too sweet',
+      'too bitter',
     ],
     extractors: {
-      preferredTags: (match) => {
-        if (match.includes('dessert')) return ['sweet'];
-        if (match.includes('aperitif') || match.includes('before meal')) return ['bitter', 'citrus'];
-        if (match.includes('digestif') || match.includes('after meal')) return ['herbal', 'bitter'];
-        if (match.includes('relaxing')) return ['smooth', 'warm'];
-        return [];
-      },
-      preferredTypes: (match) => {
-        if (match.includes('aperitif')) return [LiqourType.AMARO];
-        if (match.includes('digestif')) return [LiqourType.AMARO, LiqourType.LIQUEUR];
-        return [];
-      },
-      avoidedTags: () => [],
+      intent: () => 'avoidance',
+      avoidedTags: (match) => extractNegativeTags(match),
+      reasoning: (match) => `You want to avoid ${extractNegativeTags(match).join(', ')} flavors.`,
+      response: (match) =>
+        `I'll make sure to avoid recommending drinks with ${extractNegativeTags(match).join(', ')} characteristics.`,
+    },
+    confidence: 0.7,
+  },
+  {
+    id: 'comparison',
+    pattern: ['similar to', 'like', 'compared to', 'versus', 'difference between'],
+    extractors: {
+      intent: () => 'comparison',
+      comparisonTags: (match) => extractTags(match),
+      reasoning: (match) => `You're looking for comparisons or similar options to ${extractTags(match).join(', ')}.`,
+      response: (match) =>
+        `I can help you find options similar to ${extractTags(match).join(', ')} or explain the differences.`,
     },
     confidence: 0.6,
-    response: 'For that occasion, I would recommend something with {preferredTags} characteristics.',
+  },
+  {
+    id: 'explanation',
+    pattern: ['why', 'how', 'explain', 'tell me about', 'what is', 'describe'],
+    extractors: {
+      intent: () => 'explanation',
+      topicTags: (match) => extractTags(match),
+      reasoning: (match) => `You're looking for more information about ${extractTags(match).join(', ')}.`,
+      response: (match) =>
+        `I can explain more about ${extractTags(match).join(', ')} and how it relates to your preferences.`,
+    },
+    confidence: 0.7,
   },
   {
     id: 'fallback',
-    pattern: ['.'],
+    pattern: /.*/,
     extractors: {
-      preferredTags: () => [],
-      avoidedTags: () => [],
-      preferredTypes: () => [],
+      intent: () => 'general_inquiry',
+      reasoning: () => "I understand you're looking for drink recommendations.",
+      response: () =>
+        'I can help you find drinks that match your taste preferences. What flavors do you typically enjoy?',
     },
     confidence: 0.1,
-    response:
-      "I'm not sure what kind of liquor you're looking for. Could you tell me more about your taste preferences? Do you like sweet, bitter, smoky, or herbal flavors?",
   },
 ];

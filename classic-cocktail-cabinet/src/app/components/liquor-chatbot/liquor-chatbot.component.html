@@ -23,7 +23,7 @@
               <ul class="ctl-list-disc ctl-pl-5 ctl-space-y-2">
                 @for (liquor of message.recommendations; track liquor.name) {
                   <li class="ctl-mb-2">
-                    <div class="ctl-font-medium">{{ liquor.name }}</div>
+                    <div class="ctl-font-medium">{{ liquor | json }}</div>
                     <div class="ctl-text-sm ctl-text-gray-600">Type: {{ liquor.type.toLowerCase() }}</div>
                     <div class="ctl-text-sm ctl-text-gray-600">Characteristics: {{ liquor.tags.join(', ') }}</div>
                   </li>

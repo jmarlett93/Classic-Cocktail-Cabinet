@@ -16,6 +16,14 @@ export interface RecommendationResult {
   response: string;
 }
 
+interface VectorResult {
+  document: Document;
+  score: number;
+  id: string;
+  type: string;
+  tags: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -66,14 +74,56 @@ export class LiquorRecommendationAgentChainService {
           return memoryResult['chat_history'] || '';
         },
       },
-      this.promptTemplate,
-      // Extract text from prompt output
-      (promptOutput) => {
-        if (typeof promptOutput === 'string') return promptOutput;
-        return promptOutput.text || promptOutput.value || JSON.stringify(promptOutput);
+      // First, perform vector similarity search
+      async (input) => {
+        const vectorResultsWithScores = await this.vectorStore.similaritySearchWithScore(input.userInput, 8);
+        console.log(vectorResultsWithScores);
+
+        const mappedResults = vectorResultsWithScores.map(([doc, score]) => ({
+          id: doc.metadata['id'],
+          score: Math.round(score * 100) / 100,
+          metadata: doc.metadata,
+          content: doc.pageContent,
+        }));
+        console.log(mappedResults);
+        return {
+          ...input,
+          vectorResults: mappedResults,
+        };
       },
-      // Use the advanced NLP processor instead of the simple one
-      (promptText) => this.processWithAdvancedNlp(promptText),
+      // Then process with prompt template
+      async (input) => {
+        const promptResult = await this.promptTemplate.format(input);
+        return {
+          ...input,
+          promptResult,
+        };
+      },
+      // Extract text from prompt output and process with NLP
+      async (input) => {
+        const nlpResult = this.nlpProcessor.processInput(input.promptResult);
+
+        // Get recommendations with scores
+        const recommendations = this.getLiquorsByIds(input.vectorResults.map((result: VectorResult) => result.id)).map(
+          (liquor, index) => {
+            console.log(liquor);
+            return {
+              ...liquor,
+              matchScore: input.vectorResults[index].score,
+            };
+          },
+        );
+
+        return JSON.stringify({
+          recommendations,
+          vectorScores: recommendations,
+          intent: nlpResult.intent,
+          detectedPreferences: nlpResult.detectedPreferences,
+          reasoning: nlpResult.reasoning,
+          confidence: nlpResult.confidence,
+          response: nlpResult.response,
+        });
+      },
       new StringOutputParser(),
     ]);
 
@@ -82,143 +132,32 @@ export class LiquorRecommendationAgentChainService {
   }
 
   private initializeVectorStore(): void {
-    // Add your liquor data to the vector store
     const allLiquors = [...liquors];
-    // vector store is deterministic for now.
     allLiquors.forEach((liquor) => {
       const document = {
         pageContent: `${liquor.name}: Tags: ${liquor.tags.join(', ')}`,
         metadata: { id: liquor.name, type: liquor.type, tags: liquor.tags },
       };
-
       this.vectorStore.addDocuments([document]);
     });
   }
 
-  private processWithAdvancedNlp(promptText: string): string {
-    console.log('Processing with advanced NLP:', promptText);
-
-    // Use the CustomNlpProcessor to process the input
-    //TODO: enhance this to parse and statements and correctly add negations.
-    // Also ensure it handles extra tags and types including fuzzy matches.
-    const nlpResult = this.nlpProcessor.processInput(promptText);
-
-    // Convert the result to a string for the LangChain pipeline
-    return JSON.stringify({
-      preferredTypes: nlpResult.liquorTypes,
-      preferredTags: nlpResult.keywords,
-      avoidedTags: nlpResult.negativeKeywords,
-      reasoning: nlpResult.reasoning,
-      confidence: nlpResult.confidence,
-      responseTemplate: nlpResult.responseTemplate,
-    });
-  }
   public async getRecommendations(userInput: string): Promise<RecommendationResult> {
-    let recommendations: Liqour[] = [];
-
-    const vectorResults = await this.vectorStore.similaritySearch(userInput, 15);
-    if (vectorResults.length > 0) {
-      const liquorIds = vectorResults.map((doc) => doc.metadata['id']);
-      recommendations = this.getLiquorsByIds(liquorIds);
-    }
-
     const result = await this.chain.invoke({ userInput });
-    const nlpResult = JSON.parse(result);
+    const chainResult = JSON.parse(result);
 
-    // For now memory is not used.
-    await this.memory.saveContext({ input: userInput }, { output: JSON.stringify(nlpResult) });
-
-    // It's possible that we could improve the embeddings to include type boosts.
-    if (nlpResult.preferredTypes && nlpResult.preferredTypes.length > 0) {
-      const tempRecLength = recommendations.length;
-      recommendations = recommendations.filter((liquor) => nlpResult.preferredTypes.includes(liquor.type));
-      console.log('tempRecLength preferredTypes', tempRecLength, 'newRecLength', recommendations.length);
-    }
-
-    if (nlpResult.avoidedTags && nlpResult.avoidedTags.length > 0) {
-      const tempRecLength = recommendations.length;
-      recommendations = recommendations.filter(
-        (liquor) => !liquor.tags.some((tag) => nlpResult.avoidedTags.includes(tag)),
-      );
-      console.log('tempRecLength avoidedTags', tempRecLength, 'newRecLength', recommendations.length);
-    }
-
-    // Fallbacks if needed
-    if (recommendations.length === 0) {
-      // Your existing fallback logic
-    }
+    // Save context to memory
+    await this.memory.saveContext({ input: userInput }, { output: result });
 
     return {
-      recommendations,
-      reasoning: nlpResult.reasoning,
-      confidence: nlpResult.confidence,
-      response: this.nlpProcessor.formatResponse(nlpResult),
+      recommendations: chainResult.recommendations,
+      reasoning: chainResult.reasoning,
+      confidence: chainResult.confidence,
+      response: chainResult.response,
     };
   }
 
-  // public async getRecommendations(userInput: string): Promise<RecommendationResult> {
-  //   console.log('getRecommendations', userInput);
-
-  //   // Process with our custom chain
-  //   const result = await this.chain.invoke({ userInput });
-  //   const nlpResult = JSON.parse(result);
-
-  //   // Save to memory for context in future interactions
-  //   await this.memory.saveContext({ input: userInput }, { output: JSON.stringify(nlpResult) });
-
-  //   // Get recommendations based on semantic search if available
-  //   let recommendations: Liqour[] = [];
-  //   console.log('nlpResult', nlpResult);
-  //   if (nlpResult.preferredTags.length > 0) {
-  //     // Try semantic search first
-  //     const searchQuery = nlpResult.preferredTags.join(' ');
-  //     const vectorResults = await this.vectorStore.similaritySearch(searchQuery, 10);
-
-  //     if (vectorResults.length > 0) {
-  //       console.log('vectorResults', vectorResults);
-  //       // Extract liquor IDs from search results
-  //       const liquorIds = vectorResults.map((doc) => doc.metadata['id']);
-  //       // Fetch full liquor objects (implementation depends on your data structure)
-  //       recommendations = this.getLiquorsByIds(liquorIds);
-  //     } else {
-  //       console.log('no vector results', nlpResult.preferredTags);
-  //       // Fall back to tag-based search
-  //       recommendations = findLiquorsByTags(nlpResult.preferredTags);
-  //     }
-  //   }
-
-  //   // Apply additional filtering logic
-  //   // Filter by type if specified
-  //   if (nlpResult.preferredTypes && nlpResult.preferredTypes.length > 0) {
-  //     recommendations = recommendations.filter((liquor) => nlpResult.preferredTypes.includes(liquor.type));
-  //   }
-
-  //   // Remove items with avoided tags
-  //   if (nlpResult.avoidedTags && nlpResult.avoidedTags.length > 0) {
-  //     recommendations = recommendations.filter(
-  //       (liquor) => !liquor.tags.some((tag) => nlpResult.avoidedTags.includes(tag)),
-  //     );
-  //   }
-
-  //   // If no recommendations, try using common tags
-  //   if (recommendations.length === 0) {
-  //     const commonTags = ['sweet', 'smooth', 'warm'];
-  //     recommendations = findLiquorsByTags(commonTags);
-  //   }
-
-  //   // Limit to top 5 recommendations
-  //   recommendations = recommendations.slice(0, 10);
-
-  //   return {
-  //     recommendations,
-  //     reasoning: nlpResult.reasoning,
-  //     confidence: nlpResult.confidence,
-  //     response: this.nlpProcessor.formatResponse(nlpResult),
-  //   };
-  // }
-
   private getLiquorsByIds(ids: string[]): Liqour[] {
-    console.log('getLiquorsByIds', ids);
     return liquors.filter((liquor) => ids.includes(liquor.name));
   }
 }

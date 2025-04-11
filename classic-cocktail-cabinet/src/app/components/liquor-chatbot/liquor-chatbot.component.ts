@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +7,7 @@ import { LiquorChatbotStore } from './liquor-chatbot.store';
 @Component({
   selector: 'app-liquor-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, JsonPipe],
   templateUrl: './liquor-chatbot.component.html',
   styleUrls: ['./liquor-chatbot.component.scss'],
   providers: [LiquorChatbotStore],
