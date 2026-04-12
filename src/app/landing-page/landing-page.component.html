@@ -1,0 +1,50 @@
+<div class="landing">
+  <div class="landing__inner">
+    <p class="landing__eyebrow">Taste-first bottle finder</p>
+    <h1 class="landing__title">
+      Describe a flavor.
+      <span class="landing__title-accent">Get a ranked shortlist.</span>
+    </h1>
+    <p class="landing__lede">
+      Type how you like drinks to taste—bright, dry, herbal, smoky—and we match your words to bottles in our catalog.
+      Rank order is explainable and consistent; no recipes or shopping lists here, just flavor signals.
+    </p>
+
+    <div class="landing__composer" role="search">
+      <label class="landing__label" for="taste-seed">What flavors are you in the mood for?</label>
+      <div class="landing__field-row">
+        <input
+          id="taste-seed"
+          type="text"
+          class="landing__input"
+          [value]="inputText()"
+          (input)="setInput(($any($event.target)).value)"
+          (keydown.enter)="goToTasteChat()"
+          [attr.placeholder]="placeholderText()"
+          autocomplete="off"
+          aria-describedby="taste-hint"
+        />
+        <button type="button" mat-flat-button class="landing__cta" (click)="goToTasteChat()">
+          Open taste chat
+        </button>
+      </div>
+      <p id="taste-hint" class="landing__hint">Press Enter or the button—your line can prefill the chat.</p>
+    </div>
+
+    <section class="landing__starters" aria-labelledby="starters-heading">
+      <h2 id="starters-heading" class="landing__starters-heading">Try a starter phrase</h2>
+      <mat-chip-set class="landing__chips" aria-label="Example taste phrases">
+        @for (s of tasteStarters; track s.text) {
+          <mat-chip class="landing__chip" (click)="useStarter(s.text)" tabindex="0" (keydown.enter)="useStarter(s.text)">
+            {{ s.label }}
+          </mat-chip>
+        }
+      </mat-chip-set>
+    </section>
+
+    <p class="landing__footer-note">
+      Already chatting?
+      <a routerLink="/liquor-recommendations" class="landing__link">Continue in taste chat</a>
+    </p>
+  </div>
+</div>

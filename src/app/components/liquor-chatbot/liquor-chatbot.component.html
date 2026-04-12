@@ -1,0 +1,79 @@
+<section class="taste-chat" aria-labelledby="taste-chat-heading">
+  <header class="taste-chat__header">
+    <h2 id="taste-chat-heading" class="taste-chat__title">Taste chat</h2>
+    <p class="taste-chat__subtitle">
+      Describe flavors in your own words. You get a ranked list from our catalog, and a short reply is phrased in your browser with WebLLM (WebGPU; first reply may load a small model).
+    </p>
+  </header>
+
+  <div
+    #chatContainer
+    class="taste-chat__scroll"
+    role="log"
+    aria-live="polite"
+    aria-relevant="additions"
+    aria-label="Conversation"
+  >
+    @for (message of store.messages(); track message.id) {
+      <article
+        class="taste-chat__turn"
+        [class.taste-chat__turn--user]="message.sender === 'user'"
+        [attr.aria-label]="message.sender === 'user' ? 'You said' : 'Assistant'"
+      >
+        <div
+          class="taste-chat__bubble"
+          [class.taste-chat__bubble--user]="message.sender === 'user'"
+          [class.taste-chat__bubble--bot]="message.sender === 'bot'"
+        >
+          <p class="taste-chat__bubble-text">{{ message.text }}</p>
+
+          @if (message.recommendations && message.recommendations.length > 0) {
+            <div class="taste-chat__results">
+              <h3 class="taste-chat__results-heading">Ranked for your taste</h3>
+              <ol class="taste-chat__list">
+                @for (liquor of message.recommendations; track liquor.name; let rank = $index) {
+                  <li class="taste-chat__item">
+                    <span class="taste-chat__rank" aria-hidden="true">{{ rank + 1 }}</span>
+                    <div class="taste-chat__item-body">
+                      <span class="taste-chat__name">{{ liquor.name }}</span>
+                      <span class="taste-chat__meta">{{ liquor.type.toLowerCase() }}</span>
+                      <p class="taste-chat__tags">{{ liquor.tags.join(' · ') }}</p>
+                    </div>
+                  </li>
+                }
+              </ol>
+              @if (message.reasoning) {
+                <p class="taste-chat__why">{{ message.reasoning }}</p>
+              }
+            </div>
+          }
+        </div>
+      </article>
+    }
+
+    @if (store.isLoading()) {
+      <div class="taste-chat__loading" aria-busy="true" aria-label="Thinking">
+        <span class="taste-chat__dot"></span>
+        <span class="taste-chat__dot"></span>
+        <span class="taste-chat__dot"></span>
+      </div>
+    }
+  </div>
+
+  <form class="taste-chat__form" (ngSubmit)="sendMessage()">
+    <label for="chat-input" class="taste-chat__sr-only">Your taste message</label>
+    <input
+      id="chat-input"
+      type="text"
+      class="taste-chat__input"
+      [value]="store.userInput()"
+      (input)="updateInput($event)"
+      placeholder="e.g. bright, dry, a little bitter…"
+      autocomplete="off"
+      aria-label="Your taste message"
+    />
+    <button type="submit" class="taste-chat__send" [disabled]="store.isLoading() || !store.userInput().trim()" aria-label="Send">
+      <mat-icon aria-hidden="true">send</mat-icon>
+    </button>
+  </form>
+</section>

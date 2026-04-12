@@ -1,0 +1,185 @@
+@use '../../theme-variables.scss' as *;
+
+/* Cool clarity: tinted neutrals (OKLCH), taste-led accents — see .impeccable.md */
+.landing {
+  --surface: oklch(0.97 0.012 248);
+  --surface-2: oklch(0.94 0.018 248);
+  --ink: oklch(0.28 0.04 265);
+  --ink-soft: oklch(0.42 0.03 265);
+  --accent: oklch(0.58 0.14 195);
+  --accent-deep: oklch(0.48 0.12 200);
+  --ring: oklch(0.62 0.08 195);
+
+  min-height: 100%;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.landing__inner {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+.landing__eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.landing__title {
+  margin: 0 0 1.25rem;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.85rem, 4.2vw, 2.65rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+}
+
+.landing__title-accent {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: $font-script, cursive;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  letter-spacing: 0;
+  color: var(--accent-deep);
+}
+
+.landing__lede {
+  margin: 0 0 2rem;
+  max-width: 52ch;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.landing__composer {
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-radius: 1rem;
+  background: oklch(0.99 0.008 248);
+  box-shadow:
+    0 1px 0 oklch(0.9 0.02 248),
+    0 12px 40px -24px oklch(0.45 0.04 260 / 0.35);
+}
+
+.landing__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.landing__field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.landing__input {
+  flex: 1 1 16rem;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 1px solid oklch(0.88 0.02 248);
+  border-radius: 0.65rem;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 1rem;
+  background: oklch(0.995 0.004 248);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.landing__input::placeholder {
+  color: oklch(0.55 0.02 260);
+}
+
+.landing__input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 35%, transparent);
+}
+
+.landing__cta {
+  flex: 0 0 auto;
+  align-self: stretch;
+  padding-inline: 1.35rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  border-radius: 0.65rem !important;
+  background: var(--accent-deep) !important;
+  color: oklch(0.99 0.01 248) !important;
+}
+
+.landing__cta:hover {
+  filter: brightness(1.06);
+}
+
+.landing__hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: oklch(0.5 0.02 265);
+}
+
+.landing__starters {
+  margin-top: 2.5rem;
+}
+
+.landing__starters-heading {
+  margin: 0 0 0.75rem;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.landing__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.landing__chip {
+  cursor: pointer;
+  font-family: $font-primary, system-ui, sans-serif !important;
+  border-radius: 999px !important;
+  background: var(--surface-2) !important;
+  border: 1px solid oklch(0.88 0.02 248) !important;
+  color: var(--ink) !important;
+}
+
+.landing__chip:hover {
+  background: oklch(0.92 0.025 200) !important;
+  border-color: color-mix(in oklch, var(--accent) 28%, oklch(0.88 0.02 248)) !important;
+}
+
+.landing__footer-note {
+  margin: 2.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.landing__link {
+  color: var(--accent-deep);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.landing__link:hover {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing__input,
+  .landing__cta {
+    transition: none;
+  }
+}

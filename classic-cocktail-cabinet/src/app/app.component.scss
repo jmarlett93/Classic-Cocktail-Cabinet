@@ -1,9 +1,0 @@
-@use '../theme-variables.scss' as *;
-@use 'sass:color';
-.mat-toolbar {
-  background-color: $color-primary;
-}
-
-.mat-icon {
-  color: color.adjust($color-neutral-variant, $lightness: +50%);
-}

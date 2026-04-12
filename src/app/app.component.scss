@@ -1,0 +1,115 @@
+@use '../theme-variables.scss' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: oklch(0.97 0.012 248);
+  color: oklch(0.28 0.04 265);
+}
+
+.app-shell__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: clamp(1rem, 3vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: oklch(0.32 0.045 258);
+  color: oklch(0.96 0.015 248);
+}
+
+.app-shell__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.app-shell__title {
+  margin: 0;
+  font-family: $font-script, cursive;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.app-shell__tagline {
+  margin: 0;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.app-shell__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.app-shell__navlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: oklch(0.92 0.02 248);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.app-shell__navlink mat-icon {
+  font-size: 1.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: inherit;
+}
+
+.app-shell__navlink:hover {
+  background: oklch(0.4 0.04 258 / 0.55);
+}
+
+.app-shell__navlink--active {
+  background: oklch(0.42 0.06 200 / 0.45);
+  border-color: oklch(0.72 0.1 195 / 0.45);
+}
+
+.app-shell__main {
+  flex: 1;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+}
+
+.app-shell__footer {
+  padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
+  background: oklch(0.94 0.014 248);
+  border-top: 1px solid oklch(0.88 0.02 248);
+}
+
+.app-shell__footer-text {
+  margin: 0;
+  text-align: center;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: 0.8125rem;
+  color: oklch(0.45 0.03 265);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell__navlink {
+    transition: none;
+  }
+}

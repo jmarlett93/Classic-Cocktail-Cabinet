@@ -1,0 +1,31 @@
+<div class="app-shell">
+  <header class="app-shell__header">
+    <div class="app-shell__brand">
+      <h1 class="app-shell__title">{{ title }}</h1>
+      <p class="app-shell__tagline">Taste keywords → ranked bottles</p>
+    </div>
+    <nav class="app-shell__nav" aria-label="Main">
+      <a
+        routerLink="/welcome"
+        routerLinkActive="app-shell__navlink--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="app-shell__navlink"
+      >
+        <mat-icon aria-hidden="true">palette</mat-icon>
+        <span>Start</span>
+      </a>
+      <a routerLink="/liquor-recommendations" routerLinkActive="app-shell__navlink--active" class="app-shell__navlink">
+        <mat-icon aria-hidden="true">chat_bubble</mat-icon>
+        <span>Taste chat</span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="app-shell__main">
+    <router-outlet />
+  </main>
+
+  <footer class="app-shell__footer">
+    <p class="app-shell__footer-text">© {{ currentYear }} Classic Cocktail Cabinet — flavor-guided picks from our catalog.</p>
+  </footer>
+</div>
