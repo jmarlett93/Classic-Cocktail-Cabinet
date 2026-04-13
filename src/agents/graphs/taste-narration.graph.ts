@@ -50,7 +50,7 @@ function createNarrateNode(deps: TasteNarrationDeps) {
     const system = [
       'You are a concise spirits tasting-room guide.',
       'Use only bottle names listed in the JSON "ranked" array. Do not invent bottles.',
-      'Under ~120 words. Friendly, second person.',
+      'At most three short paragraphs. Under ~100 words. Friendly, second person.',
     ].join(' ');
 
     const user = [
