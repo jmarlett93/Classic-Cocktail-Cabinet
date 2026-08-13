@@ -4,6 +4,8 @@
 
 This file aligns **what the product claims to do**, **what the codebase actually delivers**, and **where to invest next**. It is meant to resolve the current lack of focus between “cocktail cabinet / recipes” messaging and “liquor chatbot” implementation.
 
+**Chosen direction (2026-08):** Direction B (liquor discovery chatbot) is **abandoned**. Investment is **Direction A**, specified as a basic two-modal discovery system in [prds/PRODUCT-BRIEF-two-modal-discovery.md](./prds/PRODUCT-BRIEF-two-modal-discovery.md).
+
 ---
 
 ## Elevator pitch (as implemented today)
@@ -102,9 +104,9 @@ flowchart TB
     T1 -.->|weak handoff| T2
   end
 
-  subgraph Near["Near direction (pick 1 primary)"]
-    N1["A: Recipe-led cabinet app"]
-    N2["B: Liquor discovery assistant"]
+  subgraph Near["Chosen direction"]
+    N1["A: Two-modal discovery (drink / bottle)"]
+    N2["B: Liquor chat — abandoned"]
   end
 
   VS_Discover --> Near
@@ -114,32 +116,36 @@ flowchart TB
   Today --> Near
 ```
 
-### Direction A — Recipe-led classic cabinet (matches name + landing)
+### Direction A — Recipe-led classic cabinet (**chosen**)
 
-- **Anchor outcome:** “From my bottles → recipes I can make.”
-- **Requires:** Non-empty `recipeBook` (or external source), ingredient graph linking `RecipeIngredient` to `Liqour`, optional `UserCabinet` entity, UX for browse + filter + “make tonight.”
-- **Keeps:** Material + Angular shell; may **demote** heavy chat in favor of structured flows.
+Specified in [prds/PRODUCT-BRIEF-two-modal-discovery.md](./prds/PRODUCT-BRIEF-two-modal-discovery.md):
 
-### Direction B — Liquor discovery assistant (matches most code)
+- **Anchor outcomes:** **By the drink** (taste + bottles to make it) and **by the bottle** (drinks this opens, and which next bottle unlocks the most recipes).
+- **Requires:** Non-empty recipe catalog joined to bottles; **flavor weights** on bottles and on drinks (inherited from liquors + authored from prep/mixology/garnish); mechanical **unlock** given a seed bottle; recommendations given a **bottle or a flavor**.
+- **Keeps:** Material + Angular shell; **demote/remove chat** as the product surface.
 
-- **Anchor outcome:** “Describe a vibe → shortlist of bottles + rationale.”
-- **Requires:** Tight landing → chat handoff, fix NLP input wiring, optional persistence; recipes become **out of scope** or a later phase.
-- **Keeps:** Vector + template stack; rename product copy to avoid “cabinet/recipes” false promise.
+### Direction B — Liquor discovery assistant (**abandoned**)
+
+- **Was:** “Describe a vibe → shortlist of bottles + rationale” via chat, embeddings, and NLP templates.
+- **Status:** Abandoned. Historical PRD: [prds/PRD-taste-keyword-liquor-recommendations.md](./prds/PRD-taste-keyword-liquor-recommendations.md). Taste remains as **weighted catalog data**, not as a chatbot.
 
 ### Recommended sequencing (product)
 
-1. **Declare a primary direction** (A or B) in writing; defer the other to a later milestone.
-2. **Close the landing → core loop** in one click: pass prompt (and optional chips as structured preferences) into the experience that actually runs the engine.
-3. **Backfill the missing entity** for the chosen direction: **recipes + cabinet** for A, or **preference profile + explanation quality** for B.
-4. **Measure one north-star metric** per stream (e.g., time-to-first-useful-suggestion, % sessions with saved cabinet, recipe views).
+1. **Done:** Primary direction is A (two-modal discovery); B is abandoned.
+2. **Populate the two catalogs** (bottles with flavor weights; drinks with bottle joins and composed flavor) so both modes have something real to show.
+3. **Ship the two paths and the crossing** (drink ↔ bottle; flavor as entry, not a third mode), including **unlock** from a single seed bottle.
+4. **Retire chatbot claims and navigation** so landing copy matches the two modes.
+5. **Measure** time-to-first-defensible-next-action (a drink to make or a bottle to buy, with a data-backed reason).
 
 ---
 
-## Out of scope (until direction is explicit)
+## Out of scope (until a later brief)
 
+- Direction B chat agent as the product (abandoned).
 - Multi-user accounts, sync, and commerce integrations.
-- Real LLM API calls (LangChain is used for orchestration and memory; embeddings are **custom deterministic**, not remote models).
+- Real LLM API calls as the ranking/unlock engine.
 - Mobile-native apps (web-first is fine).
+- Full pantry modeling, substitutions, and optimal k-bottle kits (see open questions in the two-modal brief).
 
 ---
 
@@ -154,6 +160,8 @@ flowchart TB
 
 ---
 
-## Related document
+## Related documents
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for systems, data entities, and how structure should support the value streams above.
+- [prds/PRODUCT-BRIEF-two-modal-discovery.md](./prds/PRODUCT-BRIEF-two-modal-discovery.md) — **chosen product brief** (two-modal discovery).
+- [docs/DATASET-DESIGN.md](./docs/DATASET-DESIGN.md) — classified catalogs and flavor space (design; not yet populated in app data).
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — systems and data entities; still describes current code, including the abandoned chat path, until it is updated.
