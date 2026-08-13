@@ -1,9 +1,12 @@
 # PRD: Taste-keyword chat → correct ranked liquor recommendations
 
-**Status:** Draft  
+**Status:** Abandoned  
 **Owner:** Product / Engineering  
-**Aligned doc:** [PRODUCT.md](../PRODUCT.md) (Direction B — liquor discovery assistant)  
-**Scope:** Single value proposition only; no recipes, cabinet, or accounts.
+**Aligned doc:** [PRODUCT.md](../PRODUCT.md) (Direction B — liquor discovery assistant) — **superseded**  
+**Replaced by:** [PRODUCT-BRIEF-two-modal-discovery.md](./PRODUCT-BRIEF-two-modal-discovery.md)  
+**Scope (historical):** Single value proposition only; no recipes, cabinet, or accounts.
+
+> **Abandoned.** Direction B (taste-keyword liquor chatbot as the product) is no longer the investment path. Do not implement this PRD. Flavor still exists in the successor brief as **weighted data on bottles and drinks**, not as a conversational recommender.
 
 ---
 
