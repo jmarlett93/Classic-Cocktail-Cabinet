@@ -1,0 +1,50 @@
+{
+  "bottleKind": ["spirit", "whiskey", "amaro", "liqueur", "vermouth", "bitters", "fortified-wine", "other"],
+  "spiritFamily": [
+    "gin",
+    "vodka",
+    "rum",
+    "agave",
+    "brandy",
+    "whiskey-bourbon",
+    "whiskey-rye",
+    "whiskey-scotch",
+    "whiskey-irish",
+    "whiskey-other",
+    "amaro",
+    "vermouth",
+    "liqueur-orange",
+    "liqueur-herbal",
+    "liqueur-other",
+    "bitters-aromatic",
+    "bitters-citrus",
+    "other"
+  ],
+  "typicalRole": ["base", "modifier", "bitter", "accent", "lengthener"],
+  "drinkFamily": [
+    "sour",
+    "highball",
+    "spritz",
+    "old-fashioned",
+    "martini-manhattan",
+    "negroni-family",
+    "fizz",
+    "cobbler",
+    "tiki",
+    "other"
+  ],
+  "method": ["stir", "shake", "build", "blend", "swizzle", "throw"],
+  "glass": ["coupe", "rocks", "highball", "nick-and-nora", "flute", "other"],
+  "ingredientRole": [
+    "base",
+    "modifier",
+    "bitter",
+    "accent",
+    "rinse",
+    "lengthener",
+    "sweetener",
+    "citrus",
+    "garnish"
+  ],
+  "stapleKind": ["citrus-juice", "syrup", "sparkling", "dairy-egg", "ice", "garnish", "other"]
+}

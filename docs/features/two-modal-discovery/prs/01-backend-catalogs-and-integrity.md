@@ -18,7 +18,7 @@ Area: backend · Internal ID: `PR-two-modal-discovery-001`
 load vocabulary + bottles + staples + drinks
 → validate unique ids, flavor keys ⊆ vocab, recipe joins resolve
 → ≥1 unlock bottle per drink; collectables ⊆ weighted bottles
-→ export catalog bundle for domain services and UI
+→ export catalog bundle for domain services and UI (typed imports; Angular asset wiring in PR-05)
 ```
 
 ## Docs owned

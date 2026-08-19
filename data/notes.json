@@ -1,0 +1,42 @@
+[
+  {
+    "id": "note-juniper",
+    "label": "Juniper",
+    "profile": { "herbal": 0.7, "dry": 0.2, "bright": 0.2 }
+  },
+  {
+    "id": "note-orange",
+    "label": "Orange",
+    "profile": { "citrus": 0.8, "bright": 0.3, "fruity": 0.2 }
+  },
+  {
+    "id": "note-rhubarb",
+    "label": "Rhubarb",
+    "profile": { "bitter": 0.3, "earthy": 0.3, "fruity": 0.2 }
+  },
+  {
+    "id": "note-gentian",
+    "label": "Gentian",
+    "profile": { "bitter": 0.6, "earthy": 0.4 }
+  },
+  {
+    "id": "note-vanilla",
+    "label": "Vanilla",
+    "profile": { "sweet": 0.4, "oak": 0.3, "rich": 0.2 }
+  },
+  {
+    "id": "note-baking-spice",
+    "label": "Baking spice",
+    "profile": { "spicy": 0.6, "sweet": 0.2, "oak": 0.2 }
+  },
+  {
+    "id": "note-cherry",
+    "label": "Cherry",
+    "profile": { "fruity": 0.7, "sweet": 0.4 }
+  },
+  {
+    "id": "note-coffee",
+    "label": "Coffee",
+    "profile": { "rich": 0.5, "bitter": 0.3, "hot": 0.2 }
+  }
+]
