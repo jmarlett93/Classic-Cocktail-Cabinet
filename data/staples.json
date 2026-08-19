@@ -1,0 +1,97 @@
+[
+  {
+    "id": "staple-lemon-juice",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["lemon juice", "fresh lemon juice"],
+    "stapleKind": "citrus-juice",
+    "countsForUnlock": false,
+    "flavor": { "sour": 0.85, "citrus": 0.7, "bright": 0.4 }
+  },
+  {
+    "id": "staple-lime-juice",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["lime juice", "fresh lime juice"],
+    "stapleKind": "citrus-juice",
+    "countsForUnlock": false,
+    "flavor": { "sour": 0.85, "citrus": 0.75, "bright": 0.45 }
+  },
+  {
+    "id": "staple-simple-syrup",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["simple syrup", "sugar syrup"],
+    "stapleKind": "syrup",
+    "countsForUnlock": false,
+    "flavor": { "sweet": 0.9 }
+  },
+  {
+    "id": "staple-soda",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["soda water", "club soda", "seltzer"],
+    "stapleKind": "sparkling",
+    "countsForUnlock": false,
+    "flavor": { "bright": 0.2, "dry": 0.2 }
+  },
+  {
+    "id": "staple-egg-white",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["egg white"],
+    "stapleKind": "dairy-egg",
+    "countsForUnlock": false,
+    "flavor": { "creamy": 0.5 }
+  },
+  {
+    "id": "staple-ice",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["ice"],
+    "stapleKind": "ice",
+    "countsForUnlock": false
+  },
+  {
+    "id": "staple-orange-peel",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["orange peel"],
+    "stapleKind": "garnish",
+    "countsForUnlock": false
+  },
+  {
+    "id": "staple-orange-slice",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["orange slice"],
+    "stapleKind": "garnish",
+    "countsForUnlock": false
+  },
+  {
+    "id": "staple-lemon-peel",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["lemon peel", "lemon twist"],
+    "stapleKind": "garnish",
+    "countsForUnlock": false
+  },
+  {
+    "id": "staple-mint",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["fresh mint", "mint leaves"],
+    "stapleKind": "garnish",
+    "countsForUnlock": false,
+    "flavor": { "herbal": 0.6, "bright": 0.3 }
+  },
+  {
+    "id": "staple-sugar-cube",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": ["sugar cube", "sugar"],
+    "stapleKind": "syrup",
+    "countsForUnlock": false,
+    "flavor": { "sweet": 0.8 }
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "syn-bitter",
+    "terms": ["bitter", "bitterness"],
+    "profile": { "bitter": 1.0 },
+    "kind": "dimension"
+  },
+  {
+    "id": "syn-sweet",
+    "terms": ["sweet", "sugary", "dessert"],
+    "profile": { "sweet": 1.0 },
+    "kind": "dimension"
+  },
+  {
+    "id": "syn-dry",
+    "terms": ["dry", "brut", "not sweet"],
+    "profile": { "dry": 1.0 },
+    "kind": "dimension"
+  },
+  {
+    "id": "syn-bright",
+    "terms": ["bright", "lively", "zippy"],
+    "profile": { "bright": 1.0 },
+    "kind": "impression"
+  },
+  {
+    "id": "syn-herbal",
+    "terms": ["herbal", "botanical", "juniper"],
+    "profile": { "herbal": 0.85, "dry": 0.25 },
+    "kind": "note"
+  },
+  {
+    "id": "syn-citrus",
+    "terms": ["citrus", "orange", "lemon", "lime", "grapefruit", "zesty"],
+    "profile": { "citrus": 0.85, "bright": 0.5 },
+    "kind": "note"
+  },
+  {
+    "id": "syn-smoky",
+    "terms": ["smoky", "smoke", "peaty"],
+    "profile": { "smoky": 0.9, "earthy": 0.3 },
+    "kind": "note"
+  },
+  {
+    "id": "syn-rich",
+    "terms": ["rich", "boozy", "full-bodied"],
+    "profile": { "rich": 0.7, "hot": 0.3 },
+    "kind": "slang"
+  },
+  {
+    "id": "syn-fruity",
+    "terms": ["fruity", "berry", "tropical"],
+    "profile": { "fruity": 0.85, "sweet": 0.3 },
+    "kind": "dimension"
+  },
+  {
+    "id": "syn-spicy",
+    "terms": ["spicy", "peppery", "hot spice"],
+    "profile": { "spicy": 0.85, "hot": 0.2 },
+    "kind": "dimension"
+  }
+]

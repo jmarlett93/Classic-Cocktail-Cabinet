@@ -124,43 +124,76 @@ flowchart LR
 
 Entities are **types or constants that represent domain state**, independent of UI.
 
+### Legacy (Direction B — being replaced)
+
 | Entity | Location | Role | Lifecycle |
 |--------|----------|------|-----------|
-| **Liqour** | `src/app/models/recipe-book.ts` | Canonical bottle in catalog: `name`, `type`, `tags` | Static at build time |
-| **LiqourType** | same | Enum coarse category (AMARO, WHISKEY, SPIRIT, LIQUEUR, BITTERS) | Static |
-| **liquors** | same | Full recommendation universe (~50+ entries) | Static |
-| **Recipe** | same | Intended: name, ingredients, instructions, tags | **Not instantiated** — `recipeBook` is `[]` |
-| **RecipeIngredient** | same | Links amount/unit to a `Liqour` | Unused until recipes exist |
-| **Garnish** | same | Declared; unused in flows | Dormant |
-| **tasteTags** | `taste-vocabulary.ts` (re-exported from `nlp-templates.ts`) | Synonym → flavor family maps | Single source for scoring + NLP |
-| **ChatMessage** | `src/app/models/chat-types.ts` | Transcript slice: text, optional `recommendations`, `reasoning`, `confidence` | Ephemeral (in memory until refresh) |
-| **UserPromptInfoState** | `user-prompt-info.store.ts` | `prompt`, `preferences[]` | Legacy; landing handoff uses **router `?q=`** into chat |
-| **RecommendationResult** | `taste-recommendation.service.ts` | Ranked liquors + NLP copy + optional `rankedMeta` | Per request |
+| **Liqour** | `src/app/models/recipe-book.ts` | Legacy bottle tag-soup row: `name`, `type`, `tags` | Static; **migrated** into weighted bottle catalog |
+| **LiqourType** | same | Enum coarse category | Static; superseded by bottle taxonomies |
+| **liquors** | same | Legacy recommendation universe (~51 entries) | Migrated at catalog load to type-level **BottleRecord** |
+| **Recipe** (legacy) | same | Pre-discovery placeholder shape | **Not used** — `recipeBook` remains `[]` |
+| **tasteTags** | `taste-vocabulary.ts` | Legacy synonym → tag-family maps | Superseded by `data/taste-synonyms.json` + flavor dimensions |
 
-### Entity relationship (logical)
+### Two-modal discovery catalogs (PR 01)
+
+| Entity | Location | Role | Lifecycle |
+|--------|----------|------|-----------|
+| **CatalogBundle** | `src/app/core-services/catalog/catalog-bundle.ts` | Assembled bottles + drinks + staples + vocabulary | Built at load/test from JSON + migration |
+| **BottleRecord** | `src/app/models/catalog-types.ts` | Type-level shelf bottle: id, names, taxonomies, sparse **flavor** weights, `countsForUnlock: true` | Migrated from `liquors[]` + integrity-validated |
+| **DrinkRecord** | same | Authored drink: ingredient joins (bottle/staple), instructions, `flavor.authored` + `composeRule` | Static JSON (`data/recipes.json`); ≥20 drinks |
+| **StapleRecord** | same | Dataset 3 non-bottle ingredients; `countsForUnlock: false` | Static JSON (`data/staples.json`) |
+| **FlavorDimensionDef** | `data/flavor-dimensions.json` | Frozen v1 scoring axes (`flavorSpace: "v1"`, 18 dimensions) | Static |
+| **TasteSynonym** | `data/taste-synonyms.json` | Terms → query weight vector in shared flavor space | Static |
+| **FlavorNote** | `data/notes.json` | Specific aromatics projecting into dimensions | Static |
+| **Taxonomies** | `data/taxonomies.json` | Closed enums for bottle/drink/staple classification | Static |
+| **Catalog integrity** | `src/app/core-services/catalog/catalog-integrity.ts` | Load/test-time referential validation | Pure function over bundle |
+
+**Migration (`DEC-collection-universe`):** `migrateLegacyLiquors()` converts each legacy `Liqour` into a weighted **BottleRecord** with stable type ids (`bottle-dry-vermouth`, etc.). Collection picker and unlock joins use those ids only — no parallel tag-soup ownership model.
+
+**Drink joins:** Each `DrinkRecord.ingredients[]` row cites `componentKind` (`bottle` | `staple`), `componentId`, `role`, and `amountMl`. Unlock bottles = bottle rows on a drink. Staples and garnishes never appear as unlock targets.
+
+**Derived flavor (not persisted):** `inherited` and `composed` drink flavor are **not** catalog fields; only `flavor.authored` and `composeRule` ship in JSON. Composition service is PR 02.
+
+| Entity | Location | Role | Lifecycle |
+|--------|----------|------|-----------|
+| **ChatMessage** | `src/app/models/chat-types.ts` | Transcript slice (legacy chat) | Ephemeral |
+| **UserPromptInfoState** | `user-prompt-info.store.ts` | Legacy prompt store | To retire with chat chrome |
+| **RecommendationResult** | `taste-recommendation.service.ts` | Legacy ranked liquors + NLP | Superseded by discovery contracts (PR 02+) |
+
+### Entity relationship (logical — discovery catalogs)
 
 ```mermaid
 erDiagram
-  Recipe ||--o{ RecipeIngredient : contains
-  RecipeIngredient }o--|| Liqour : references
-  ChatMessage }o--o{ Liqour : may_display
-  UserPromptInfoState ||--o{ ChatMessage : should_seed
-  Liqour {
-    string name
-    LiqourType type
-    string tags
+  DrinkRecord ||--o{ DrinkIngredient : contains
+  DrinkIngredient }o--|| BottleRecord : bottle_join
+  DrinkIngredient }o--|| StapleRecord : staple_join
+  BottleRecord {
+    string id
+    string names
+    json flavor
+    bool countsForUnlock
   }
-  Recipe {
-    string name
-    string instructions
+  DrinkRecord {
+    string id
+    string names
+    json flavor_authored
   }
-  UserPromptInfoState {
-    string prompt
-    string preferences
+  StapleRecord {
+    string id
+    bool countsForUnlock
   }
+  TasteSynonym {
+    string terms
+    json profile
+  }
+  FlavorDimensionDef {
+    string id
+  }
+  TasteSynonym }o--|| FlavorDimensionDef : maps_to
+  BottleRecord }o--|| FlavorDimensionDef : weighted_by
 ```
 
-**Note:** `UserPromptInfoState` is not related in code to `ChatMessage`; the diagram shows the *desired* relationship for a coherent product loop.
+**Note:** Session collection (`ownedBottleIds`) is client state (PR 03), not a catalog entity.
 
 ---
 
@@ -257,7 +290,10 @@ These are **structural** consequences; see [PRODUCT.md](./PRODUCT.md) for the pr
 | Area | Path |
 |------|------|
 | Routes | `src/app/app.routes.ts` |
-| Models + liquor catalog | `src/app/models/recipe-book.ts` |
+| Models + liquor catalog (legacy) | `src/app/models/recipe-book.ts` |
+| Discovery catalog types | `src/app/models/catalog-types.ts`, `src/app/models/flavor-dimensions.ts` |
+| Catalog bundle + integrity | `src/app/core-services/catalog/` |
+| Catalog JSON (PROP-data-json) | `data/*.json` |
 | Chat UI | `src/app/components/liquor-chatbot/` |
 | Taste recommendation (deterministic) | `src/app/core-services/taste-recommendation.service.ts`, `liquor-scoring.ts`, `taste-vocabulary.ts` |
 | Preference / multi-turn | `src/app/core-services/preference-profile.ts` |

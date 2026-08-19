@@ -1,0 +1,937 @@
+[
+  {
+    "id": "drink-negroni",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Negroni"
+    ],
+    "description": "Equal parts gin, Campari, and sweet vermouth; stirred, bitter, and orange-bright.",
+    "drinkFamily": "negroni-family",
+    "method": "stir",
+    "glass": "rocks",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-campari",
+        "role": "bitter",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-sweet-vermouth",
+        "role": "modifier",
+        "amountMl": 30
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-peel",
+      "method": "express"
+    },
+    "instructions": "Stir gin, Campari, and sweet vermouth with ice until well chilled. Strain into a rocks glass over ice. Express an orange peel over the drink and drop it in.",
+    "flavor": {
+      "authored": {
+        "bright": 0.15,
+        "citrus": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-americano",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Americano"
+    ],
+    "description": "Campari and sweet vermouth lengthened with soda; lighter than a Negroni.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-campari",
+        "role": "bitter",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-sweet-vermouth",
+        "role": "modifier",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 90
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-slice",
+      "method": "garnish"
+    },
+    "instructions": "Build Campari and sweet vermouth in a highball glass over ice. Top with soda and gently stir. Garnish with an orange slice.",
+    "flavor": {
+      "authored": {
+        "bright": 0.2,
+        "dry": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-martini",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Martini",
+      "dry martini"
+    ],
+    "description": "Gin and dry vermouth stirred until icy and aromatic.",
+    "drinkFamily": "martini-manhattan",
+    "method": "stir",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-dry-vermouth",
+        "role": "modifier",
+        "amountMl": 10
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-lemon-peel",
+      "method": "express"
+    },
+    "instructions": "Stir gin and dry vermouth with ice until very cold. Strain into a chilled coupe. Express a lemon peel over the surface.",
+    "flavor": {
+      "authored": {
+        "dry": 0.1,
+        "bright": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-manhattan",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Manhattan"
+    ],
+    "description": "Rye whiskey and sweet vermouth stirred with aromatic bitters character.",
+    "drinkFamily": "martini-manhattan",
+    "method": "stir",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-rye-whiskey",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-sweet-vermouth",
+        "role": "modifier",
+        "amountMl": 30
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-peel",
+      "method": "express"
+    },
+    "instructions": "Stir rye and sweet vermouth with ice until chilled. Strain into a chilled coupe. Express an orange peel.",
+    "flavor": {
+      "authored": {
+        "spicy": 0.15,
+        "rich": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-old-fashioned",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Old Fashioned"
+    ],
+    "description": "Bourbon muddled with sugar and bitters character, served over ice.",
+    "drinkFamily": "old-fashioned",
+    "method": "stir",
+    "glass": "rocks",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-bourbon",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-sugar-cube",
+        "role": "sweetener",
+        "amountMl": 5
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-peel",
+      "method": "express"
+    },
+    "instructions": "Muddle sugar with a splash of water in a rocks glass. Add bourbon and ice; stir until chilled. Express orange peel.",
+    "flavor": {
+      "authored": {
+        "bitter": 0.1,
+        "rich": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-whiskey-sour",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Whiskey Sour"
+    ],
+    "description": "Bourbon shaken with lemon, syrup, and optional foam.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-bourbon",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lemon-juice",
+        "role": "citrus",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 20
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-egg-white",
+        "role": "accent",
+        "amountMl": 15
+      }
+    ],
+    "instructions": "Shake all ingredients hard with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.2,
+        "bright": 0.15,
+        "creamy": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-margarita",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Margarita"
+    ],
+    "description": "Tequila, orange liqueur, and lime shaken until tart and saline-bright.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-tequila",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-triple-sec",
+        "role": "modifier",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 25
+      }
+    ],
+    "instructions": "Shake tequila, triple sec, and lime juice with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.25,
+        "citrus": 0.15,
+        "salty": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-daiquiri",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Daiquiri"
+    ],
+    "description": "Rum, lime, and simple syrup shaken into a crisp sour.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-rum",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 20
+      }
+    ],
+    "instructions": "Shake rum, lime juice, and syrup with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.2,
+        "bright": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-mojito",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Mojito"
+    ],
+    "description": "Rum built with mint, lime, syrup, and soda.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-rum",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 20
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-mint",
+        "role": "garnish",
+        "amountMl": 8
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 60
+      }
+    ],
+    "instructions": "Muddle mint with lime and syrup. Add rum and ice; top with soda and stir gently.",
+    "flavor": {
+      "authored": {
+        "herbal": 0.15,
+        "bright": 0.2,
+        "sour": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-gin-and-tonic",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Gin and Tonic",
+      "G&T"
+    ],
+    "description": "Gin lengthened with tonic-style soda and lime.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 120
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 15
+      }
+    ],
+    "instructions": "Build gin and lime in a highball glass over ice. Top with soda and stir once.",
+    "flavor": {
+      "authored": {
+        "bitter": 0.1,
+        "dry": 0.1,
+        "bright": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-boulevardier",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Boulevardier"
+    ],
+    "description": "Bourbon in place of gin in a Negroni-style equal-parts bitter drink.",
+    "drinkFamily": "negroni-family",
+    "method": "stir",
+    "glass": "rocks",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-bourbon",
+        "role": "base",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-campari",
+        "role": "bitter",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-sweet-vermouth",
+        "role": "modifier",
+        "amountMl": 30
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-peel",
+      "method": "express"
+    },
+    "instructions": "Stir all ingredients with ice. Strain over fresh ice in a rocks glass. Express orange peel.",
+    "flavor": {
+      "authored": {
+        "rich": 0.1,
+        "citrus": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-sazerac",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Sazerac"
+    ],
+    "description": "Rye whiskey with absinthe rinse and sugar in a New Orleans classic.",
+    "drinkFamily": "old-fashioned",
+    "method": "stir",
+    "glass": "rocks",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-rye-whiskey",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-absinthe",
+        "role": "rinse",
+        "amountMl": 5
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-sugar-cube",
+        "role": "sweetener",
+        "amountMl": 5
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-lemon-peel",
+      "method": "express"
+    },
+    "instructions": "Rinse a chilled rocks glass with absinthe. Stir rye and sugar with ice; strain into the glass. Express lemon peel.",
+    "flavor": {
+      "authored": {
+        "herbal": 0.15,
+        "spicy": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-sidecar",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Sidecar"
+    ],
+    "description": "Cognac, orange liqueur, and lemon in a brandy sour template.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-cognac",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-triple-sec",
+        "role": "modifier",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lemon-juice",
+        "role": "citrus",
+        "amountMl": 25
+      }
+    ],
+    "instructions": "Shake cognac, triple sec, and lemon juice with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.2,
+        "bright": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-cosmopolitan",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Cosmopolitan",
+      "cosmo"
+    ],
+    "description": "Vodka, orange liqueur, and lime in a crisp pink sour.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-vodka",
+        "role": "base",
+        "amountMl": 45
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-triple-sec",
+        "role": "modifier",
+        "amountMl": 20
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 20
+      }
+    ],
+    "instructions": "Shake vodka, triple sec, and lime juice with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.15,
+        "fruity": 0.1,
+        "bright": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-moscow-mule",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Moscow Mule"
+    ],
+    "description": "Vodka, lime, and ginger-spiced soda in a highball.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-vodka",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 15
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 100
+      }
+    ],
+    "instructions": "Build vodka and lime over ice in a highball glass. Top with soda and stir.",
+    "flavor": {
+      "authored": {
+        "spicy": 0.2,
+        "bright": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-paloma",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Paloma"
+    ],
+    "description": "Tequila lengthened with grapefruit-bright soda and lime.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-tequila",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 15
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 120
+      }
+    ],
+    "instructions": "Build tequila and lime over ice. Top with soda and stir gently.",
+    "flavor": {
+      "authored": {
+        "citrus": 0.2,
+        "bright": 0.15,
+        "sour": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-aperol-spritz",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Aperol Spritz"
+    ],
+    "description": "Aperol topped with soda for a bitter-orange spritz.",
+    "drinkFamily": "spritz",
+    "method": "build",
+    "glass": "other",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-aperol",
+        "role": "bitter",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 90
+      }
+    ],
+    "garnish": {
+      "stapleId": "staple-orange-slice",
+      "method": "garnish"
+    },
+    "instructions": "Build Aperol over ice in a wine glass. Top with soda and garnish with orange.",
+    "flavor": {
+      "authored": {
+        "bright": 0.2,
+        "citrus": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-french-75",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "French 75"
+    ],
+    "description": "Gin sour topped with sparkling for a celebratory fizz.",
+    "drinkFamily": "fizz",
+    "method": "shake",
+    "glass": "flute",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 30
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lemon-juice",
+        "role": "citrus",
+        "amountMl": 15
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 10
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 60
+      }
+    ],
+    "instructions": "Shake gin, lemon, and syrup with ice. Strain into a flute and top with soda.",
+    "flavor": {
+      "authored": {
+        "bright": 0.2,
+        "sour": 0.15
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-tom-collins",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Tom Collins"
+    ],
+    "description": "Gin, lemon, syrup, and soda in a tall refreshing highball.",
+    "drinkFamily": "highball",
+    "method": "build",
+    "glass": "highball",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 50
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lemon-juice",
+        "role": "citrus",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 15
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-soda",
+        "role": "lengthener",
+        "amountMl": 90
+      }
+    ],
+    "instructions": "Build gin, lemon, and syrup in a highball glass over ice. Top with soda and stir.",
+    "flavor": {
+      "authored": {
+        "sour": 0.15,
+        "bright": 0.2
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-espresso-martini",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Espresso Martini"
+    ],
+    "description": "Vodka and coffee liqueur shaken into a rich after-dinner martini.",
+    "drinkFamily": "martini-manhattan",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-vodka",
+        "role": "base",
+        "amountMl": 45
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-kahlua",
+        "role": "modifier",
+        "amountMl": 25
+      }
+    ],
+    "instructions": "Shake vodka and Kahl\u00faa hard with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "rich": 0.2,
+        "hot": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-last-word",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Last Word"
+    ],
+    "description": "Equal parts gin, green Chartreuse, maraschino, and lime.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "coupe",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-gin",
+        "role": "base",
+        "amountMl": 22
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-green-chartreuse",
+        "role": "modifier",
+        "amountMl": 22
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-luxardo-maraschino",
+        "role": "modifier",
+        "amountMl": 22
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lime-juice",
+        "role": "citrus",
+        "amountMl": 22
+      }
+    ],
+    "instructions": "Shake all ingredients with ice. Strain into a chilled coupe.",
+    "flavor": {
+      "authored": {
+        "sour": 0.15,
+        "herbal": 0.1,
+        "bright": 0.1
+      },
+      "composeRule": "v1"
+    }
+  },
+  {
+    "id": "drink-penicillin",
+    "schemaVersion": 1,
+    "flavorSpace": "v1",
+    "names": [
+      "Penicillin"
+    ],
+    "description": "Scotch sour with honey-ginger character and a smoky float.",
+    "drinkFamily": "sour",
+    "method": "shake",
+    "glass": "rocks",
+    "ingredients": [
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-scotch-whisky",
+        "role": "base",
+        "amountMl": 60
+      },
+      {
+        "componentKind": "bottle",
+        "componentId": "bottle-mezcal",
+        "role": "accent",
+        "amountMl": 7
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-lemon-juice",
+        "role": "citrus",
+        "amountMl": 25
+      },
+      {
+        "componentKind": "staple",
+        "componentId": "staple-simple-syrup",
+        "role": "sweetener",
+        "amountMl": 20
+      }
+    ],
+    "instructions": "Shake scotch, lemon, and syrup with ice. Strain over ice and float mezcal.",
+    "flavor": {
+      "authored": {
+        "spicy": 0.15,
+        "sour": 0.15,
+        "smoky": 0.1
+      },
+      "composeRule": "v1"
+    }
+  }
+]
