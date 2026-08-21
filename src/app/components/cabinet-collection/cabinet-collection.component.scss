@@ -1,0 +1,138 @@
+@use '../../../theme-variables.scss' as *;
+
+.cabinet {
+  --surface: oklch(0.97 0.012 248);
+  --ink: oklch(0.28 0.04 265);
+  --ink-soft: oklch(0.42 0.03 265);
+  --accent: oklch(0.58 0.14 195);
+  --border: oklch(0.88 0.02 248);
+
+  min-height: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+  color: var(--ink);
+}
+
+.cabinet__header {
+  margin-bottom: 2rem;
+}
+
+.cabinet__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cabinet__title {
+  margin: 0 0 0.75rem;
+  font-family: $font-primary, system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.cabinet__lede,
+.cabinet__meta,
+.cabinet__hint,
+.cabinet__empty {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cabinet__meta {
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+.cabinet__panel {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.cabinet__section-title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.cabinet__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cabinet__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'owned name'
+    '. id';
+  gap: 0.25rem 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.cabinet__owned {
+  grid-area: owned;
+}
+
+.cabinet__name {
+  grid-area: name;
+  font-weight: 600;
+}
+
+.cabinet__id {
+  grid-area: id;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.cabinet__focus-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cabinet__flavor-field {
+  width: 100%;
+}
+
+.cabinet__effective {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.cabinet__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cabinet__back {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
