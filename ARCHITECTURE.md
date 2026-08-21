@@ -285,6 +285,39 @@ These are **structural** consequences; see [PRODUCT.md](./PRODUCT.md) for the pr
 
 ---
 
+
+## Two-modal discovery ranking contracts (PR-02)
+
+This section records the backend scoring/ranking contracts implemented for PR-02 (pure TypeScript over the catalog bundle).
+
+### Drink flavor composition
+
+- Contract ID: `CONTRACT-flavor-compose`
+- Purpose: Derive `{ inherited, composed }` flavor vectors for a `DrinkRecord` using only catalog data (bottle/staple profiles, roles, amounts, and `drink.flavor.authored`).
+- Compose rule: `v1` (roleFactor table + `clamp01(inherited + authored)`; inherited is a weighted mix; composed omits zero dims).
+
+### Drink completeness query
+
+- Contract ID: `CONTRACT-drink-completeness`
+- Purpose: For a given effective bottle have-set, classify each drink as `complete` | `oneBottleAway` | `incomplete` and return `missingBottleIds`.
+- Effective have-set rule: on bottle-detail queries use `owned ∪ {focus}`; elsewhere use `owned` alone.
+- Staples rule: staples are treated as available and never appear in `missingBottleIds`.
+
+### Weighted unlock ranking
+
+- Contract ID: `CONTRACT-weighted-unlock`
+- Purpose: Given a seed/focus bottle plus an effective have-set, rank candidate next bottles by a deterministic weighted score built from:
+  - newly completable drink count,
+  - seed-as-lead count (seed participates as a lead ingredient via closed role set),
+  - flavor fit (dot-product similarity between the seed/user vector and each newly completable drink's composed flavor).
+- No classic-ness: the unlock objective omits any classic/classicBonus term (Ponytail lock `DEC-unlock-classic-deferred`).
+
+### Possible and likely ranking
+
+- Contract ID: `CONTRACT-possible-likely`
+- Purpose: Produce four deterministic bags: possible/likely × (drinks/bottles), with membership/join grounding for bottle-based queries and similarity thresholds for flavor-vector queries.
+- Proposed gate constants used by this PR: `POSSIBLE_SIMILARITY_FLOOR = 0.25`, `LIKELY_SIMILARITY_FLOOR = 0.35`, `LIKELY_LIMIT = 5`.
+
 ## File index (quick navigation)
 
 | Area | Path |
