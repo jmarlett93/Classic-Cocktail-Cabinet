@@ -1,0 +1,82 @@
+<div class="cabinet">
+  <header class="cabinet__header">
+    <p class="cabinet__eyebrow">Session cabinet</p>
+    <h1 class="cabinet__title">What bottles do you have on hand?</h1>
+    <p class="cabinet__lede">
+      Toggle bottles you own for this visit. Your focus bottle is included in the effective have-set even when it is not owned.
+    </p>
+    <p class="cabinet__meta" aria-live="polite">
+      {{ ownedCount() }} owned · {{ effectiveHaveSet().length }} in effective have-set
+    </p>
+  </header>
+
+  <section class="cabinet__panel" aria-labelledby="cabinet-owned-heading">
+    <h2 id="cabinet-owned-heading" class="cabinet__section-title">Catalog bottles</h2>
+    <ul class="cabinet__list" role="list">
+      @for (bottle of bottles(); track bottle.id) {
+        <li class="cabinet__row">
+          <mat-checkbox
+            class="cabinet__owned"
+            [checked]="cabinet.isOwned(bottle.id)"
+            (change)="onOwnedChange(bottle.id, $event.checked)"
+            [attr.aria-label]="'I have ' + bottle.displayName"
+          >
+            I have this
+          </mat-checkbox>
+          <span class="cabinet__name">{{ bottle.displayName }}</span>
+          <span class="cabinet__id">{{ bottle.id }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="cabinet__panel" aria-labelledby="cabinet-focus-heading">
+    <h2 id="cabinet-focus-heading" class="cabinet__section-title">Focus bottle</h2>
+    <mat-radio-group
+      class="cabinet__focus-group"
+      [value]="cabinet.focusBottleId()"
+      (change)="onFocusChange($event.value)"
+      aria-label="Focus bottle for this visit"
+    >
+      <mat-radio-button [value]="null">No focus</mat-radio-button>
+      @for (bottle of bottles(); track bottle.id) {
+        <mat-radio-button [value]="bottle.id">{{ bottle.displayName }}</mat-radio-button>
+      }
+    </mat-radio-group>
+  </section>
+
+  <section class="cabinet__panel" aria-labelledby="cabinet-flavor-heading">
+    <h2 id="cabinet-flavor-heading" class="cabinet__section-title">Flavor terms (optional)</h2>
+    <mat-form-field class="cabinet__flavor-field" appearance="outline">
+      <mat-label>Comma-separated flavor terms</mat-label>
+      <input
+        matInput
+        [(ngModel)]="flavorTermsInput"
+        (blur)="applyFlavorTerms()"
+        (keydown.enter)="applyFlavorTerms()"
+        placeholder="bright, dry, herbal"
+        aria-describedby="cabinet-flavor-hint"
+      />
+    </mat-form-field>
+    <p id="cabinet-flavor-hint" class="cabinet__hint">Stored for this session only; discovery screens consume these later.</p>
+  </section>
+
+  <section class="cabinet__panel" aria-labelledby="cabinet-effective-heading">
+    <h2 id="cabinet-effective-heading" class="cabinet__section-title">Effective have-set</h2>
+    <p class="cabinet__hint">Owned ∪ focus — exposed for completeness and unlock consumers.</p>
+    @if (effectiveHaveSet().length) {
+      <ul class="cabinet__effective" role="list">
+        @for (id of effectiveHaveSet(); track id) {
+          <li>{{ id }}</li>
+        }
+      </ul>
+    } @else {
+      <p class="cabinet__empty">No bottles in the effective have-set yet.</p>
+    }
+  </section>
+
+  <footer class="cabinet__footer">
+    <button type="button" mat-stroked-button (click)="clearSession()">Clear session cabinet</button>
+    <a routerLink="/welcome" class="cabinet__back">Back to welcome</a>
+  </footer>
+</div>

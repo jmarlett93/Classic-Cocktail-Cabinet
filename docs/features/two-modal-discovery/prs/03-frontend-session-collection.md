@@ -13,12 +13,18 @@ Area: frontend · Internal ID: `PR-two-modal-discovery-003`
 ## Nominal flow
 
 ```text
-user toggles "I have this" on a catalog bottle id
-→ store validates id ⊆ bottle catalog
-→ persist ownedBottleIds (+ flavor) to sessionStorage
-→ expose owned and focus for owned ∪ focus consumers
-→ new browser session starts empty
+user opens /cabinet
+→ picker lists loadCatalogBundle().bottles ids only
+→ user toggles "I have this" on a catalog bottle id
+→ CabinetStore validates id ⊆ bottle catalog
+→ persist ownedBottleIds (+ focus, flavor) to sessionStorage
+→ expose effectiveHaveSet (owned ∪ focus) for consumers
+→ tab refresh restores within visit; new browser session starts empty
 ```
+
+## Route
+
+Inspect collection UI at `/cabinet` before PR-04 wires discovery screens.
 
 ## Docs owned
 

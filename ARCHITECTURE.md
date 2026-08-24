@@ -193,7 +193,7 @@ erDiagram
   BottleRecord }o--|| FlavorDimensionDef : weighted_by
 ```
 
-**Note:** Session collection (`ownedBottleIds`) is client state (PR 03), not a catalog entity.
+**Note:** Session collection (`ownedBottleIds`, `focusBottleId`, optional flavor query) is client state in **CabinetStore** (PR 03), not a catalog entity. See [CabinetStore / session persistence](#cabinetstore--session-persistence-pr-03) below.
 
 ---
 
@@ -206,6 +206,8 @@ erDiagram
 | **LiquorChatbotComponent** | Standalone component | Chat layout, scroll; reads `q` query then clears URL | User | `LiquorChatbotStore`, `ActivatedRoute` |
 | **LiquorChatbotStore** | `@ngrx/signals` store | Messages, loading; invokes taste + optional narration graph | Component | `TasteRecommendationService`, `TasteNarrationFacade` |
 | **UserPromptInfoStore** | `@ngrx/signals` store | Legacy prompt store | — | Optional removal |
+| **CabinetStore** | `@ngrx/signals` store | Visit-scoped owned bottles, focus, flavor terms/vector; synced to `sessionStorage` | User toggles | PR-04 discovery/detail consumers |
+| **CabinetCollectionComponent** | Standalone component | Catalog-only bottle picker at `/cabinet` | User | `CabinetStore`, `loadCatalogBundle()` |
 | **TasteRecommendationService** | `providedIn: 'root'` | Orchestrates scoring + `preference-profile` + NLP on **raw user text** | Chat store | `liquors`, `CustomNlpProcessor` |
 | **LiquorScoringService** / `rankLiquors` | Pure + injectable wrapper | Deterministic tag scores, threshold, tie-break | Taste service | `RankedLiquor[]` |
 | **CustomNlpProcessor** | Class | Template match + extractors → `NlpResult` | **User utterance** (via `TasteRecommendationService`) | Response copy + confidence |
@@ -318,6 +320,23 @@ This section records the backend scoring/ranking contracts implemented for PR-02
 - Purpose: Produce four deterministic bags: possible/likely × (drinks/bottles), with membership/join grounding for bottle-based queries and similarity thresholds for flavor-vector queries.
 - Proposed gate constants used by this PR: `POSSIBLE_SIMILARITY_FLOOR = 0.25`, `LIKELY_SIMILARITY_FLOOR = 0.35`, `LIKELY_LIMIT = 5`.
 
+## CabinetStore / session persistence (PR-03)
+
+Visit-scoped cabinet state for two-modal discovery. Not a catalog entity; persisted only for the current browser session.
+
+| Piece | Location | Role |
+|-------|----------|------|
+| **CabinetStore** | `src/app/stores/cabinet-store.ts` | `@ngrx/signals` store: `ownedBottleIds`, `focusBottleId`, optional `flavorTerms` / `flavorVector` |
+| **Session persistence** | `src/app/stores/cabinet-session.persistence.ts` | Read/write `sessionStorage` key `ccc.cabinet.session.v1`; sanitize unknown bottle ids |
+| **Collection UI** | `src/app/components/cabinet-collection/` | Route `/cabinet`; catalog-only picker with “I have this” toggles and focus selection |
+
+**Invariants**
+
+- Every owned or focus id must exist in `loadCatalogBundle().bottles`; unknown ids are rejected on write and stripped on restore.
+- Persistence uses **`sessionStorage` only** (not `localStorage`); a new browser session starts empty.
+- **Effective have-set** exposed to consumers: `ownedBottleIds ∪ { focusBottleId }` via `CabinetStore.effectiveHaveSet`.
+- Picker universe is the migrated weighted bottle catalog only — no parallel tag-soup ownership model.
+
 ## File index (quick navigation)
 
 | Area | Path |
@@ -333,6 +352,7 @@ This section records the backend scoring/ranking contracts implemented for PR-02
 | NLP rules | `src/app/core-services/nlp-templates.ts`, `custom-nlp-processor.ts` |
 | Optional browser narration | `src/app/core-services/taste-narration.facade.ts`, `src/agents/graphs/taste-narration.graph.ts`, `src/agents/providers/` |
 | Landing | `src/app/landing-page/` |
+| Session cabinet store + UI | `src/app/stores/cabinet-store.ts`, `src/app/components/cabinet-collection/` |
 | Global prompt state | `src/app/stores/user-prompt-info.store.ts` |
 | Agent / LangGraph (planned) | `src/agents/` — see [docs/AGENT_ANGULAR_STYLE_GUIDE.md](./docs/AGENT_ANGULAR_STYLE_GUIDE.md) |
 | Angular vs agent style guide | [docs/AGENT_ANGULAR_STYLE_GUIDE.md](./docs/AGENT_ANGULAR_STYLE_GUIDE.md) |
