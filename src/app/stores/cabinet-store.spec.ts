@@ -26,15 +26,15 @@ describe('CabinetStore', () => {
   });
 
   it('rejects unknown bottle ids', () => {
-    expect(store.setOwned('bottle-not-in-catalog', true)).toBeFalse();
+    expect(store.setOwned('bottle-not-in-catalog', true)).toBe(false);
     expect(store.ownedBottleIds()).toEqual([]);
-    expect(store.setFocus('bottle-not-in-catalog')).toBeFalse();
+    expect(store.setFocus('bottle-not-in-catalog')).toBe(false);
     expect(store.focusBottleId()).toBeNull();
   });
 
   it('persists owned and focus ids to sessionStorage', () => {
-    expect(store.setOwned(validCampariId, true)).toBeTrue();
-    expect(store.setFocus(validVermouthId)).toBeTrue();
+    expect(store.setOwned(validCampariId, true)).toBe(true);
+    expect(store.setFocus(validVermouthId)).toBe(true);
 
     const raw = sessionStorage.getItem(CABINET_SESSION_STORAGE_KEY);
     expect(raw).toContain(validCampariId);

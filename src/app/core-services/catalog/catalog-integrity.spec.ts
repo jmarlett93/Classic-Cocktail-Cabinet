@@ -35,7 +35,7 @@ describe('Catalog integrity', () => {
     for (const name of LEGACY_LIQUOR_NAMES) {
       const id = liquorNameToBottleId(name);
       const bottle = migrated.find((b) => b.id === id);
-      expect(bottle).withContext(name).toBeDefined();
+      expect(bottle).toBeDefined();
       expect(Object.keys(bottle!.flavor).length).toBeGreaterThan(0);
       expect(bottle!.countsForUnlock).toBe(true);
     }

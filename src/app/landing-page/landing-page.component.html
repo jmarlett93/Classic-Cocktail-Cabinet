@@ -1,50 +1,89 @@
-<div class="landing">
-  <div class="landing__inner">
-    <p class="landing__eyebrow">Taste-first bottle finder</p>
-    <h1 class="landing__title">
-      Describe a flavor.
-      <span class="landing__title-accent">Get a ranked shortlist.</span>
+<div class="min-h-full bg-surface px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(2rem,5vw,4rem)] text-ink">
+  <div class="max-w-discover mx-auto">
+    <p class="mb-3 text-xs font-semibold tracking-[0.12em] uppercase text-ink-soft">Classic Cocktail Cabinet</p>
+    <h1 class="mb-5 max-w-[22ch] text-[clamp(1.85rem,4.2vw,2.65rem)] font-bold leading-[1.12] tracking-tight font-body">
+      Two ways in.
+      <span class="block mt-1.5 font-script text-[clamp(1.5rem,3.5vw,2.1rem)] font-normal text-accent-deep tracking-normal">
+        Drink, bottle, or a taste.
+      </span>
     </h1>
-    <p class="landing__lede">
-      Type how you like drinks to taste—bright, dry, herbal, smoky—and we match your words to bottles in our catalog.
-      Rank order is explainable and consistent; no recipes or shopping lists here, just flavor signals.
+    <p class="mb-8 max-w-[52ch] text-[1.05rem] leading-relaxed text-ink-soft">
+      Stock a cabinet with intention: discover drinks and the bottles behind them, or start from a bottle and see what it unlocks.
+      Flavor is the shared language when you don’t know names yet.
     </p>
 
-    <div class="landing__composer" role="search">
-      <label class="landing__label" for="taste-seed">What flavors are you in the mood for?</label>
-      <div class="landing__field-row">
+    <section class="mb-8" aria-labelledby="paths-heading">
+      <h2 id="paths-heading" class="mb-3 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Choose a path</h2>
+      <div class="grid gap-3.5 sm:grid-cols-2">
+        <a
+          routerLink="/discover/drinks"
+          class="flex flex-col gap-1.5 p-[1.15rem] px-[1.2rem] rounded-[0.9rem] border border-border bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-reduce:transition-none motion-reduce:transform-none"
+        >
+          <span class="text-[0.7rem] font-bold tracking-[0.1em] uppercase text-accent-deep">By the drink</span>
+          <span class="font-script text-[1.35rem] font-normal text-ink">Find something to make</span>
+          <span class="text-[0.9rem] leading-snug text-ink-soft">Browse classics, see composed flavor, and the bottles they ask for.</span>
+        </a>
+        <a
+          routerLink="/discover/bottles"
+          class="flex flex-col gap-1.5 p-[1.15rem] px-[1.2rem] rounded-[0.9rem] border border-border bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-reduce:transition-none motion-reduce:transform-none"
+        >
+          <span class="text-[0.7rem] font-bold tracking-[0.1em] uppercase text-accent-deep">By the bottle</span>
+          <span class="font-script text-[1.35rem] font-normal text-ink">See what a bottle opens</span>
+          <span class="text-[0.9rem] leading-snug text-ink-soft">Flavor, complete drinks, and the next bottle that unlocks the most.</span>
+        </a>
+      </div>
+    </section>
+
+    <div
+      class="p-6 pb-5 rounded-2xl bg-surface-raised shadow-[0_1px_0_oklch(0.9_0.02_248),0_12px_40px_-24px_oklch(0.45_0.04_260_/_0.35)]"
+      role="search"
+    >
+      <label class="block mb-2 text-sm font-semibold text-ink" for="taste-seed">Or start from a flavor</label>
+      <div class="flex flex-wrap gap-3 items-stretch">
         <input
           id="taste-seed"
           type="text"
-          class="landing__input"
+          class="flex-1 min-w-[16rem] min-h-12 px-4 border border-border rounded-[0.65rem] bg-[oklch(0.995_0.004_248)] text-base text-ink font-body outline-none motion-safe:transition focus-visible:border-accent focus-visible:shadow-[0_0_0_3px_oklch(0.62_0.08_195_/_0.35)] placeholder:text-[oklch(0.55_0.02_260)]"
           [value]="inputText()"
           (input)="setInput(($any($event.target)).value)"
-          (keydown.enter)="goToTasteChat()"
+          (keydown.enter)="goToFlavor()"
           [attr.placeholder]="placeholderText()"
           autocomplete="off"
           aria-describedby="taste-hint"
         />
-        <button type="button" mat-flat-button class="landing__cta" (click)="goToTasteChat()">
-          Open taste chat
+        <button
+          type="button"
+          mat-flat-button
+          class="!self-stretch !px-5 !font-semibold !tracking-wide !rounded-[0.65rem] !bg-accent-deep !text-[oklch(0.99_0.01_248)] hover:brightness-105"
+          (click)="goToFlavor()"
+        >
+          Taste it
         </button>
       </div>
-      <p id="taste-hint" class="landing__hint">Press Enter or the button—your line can prefill the chat.</p>
+      <p id="taste-hint" class="mt-3 mb-0 text-[0.8125rem] text-[oklch(0.5_0.02_265)]">
+        We map your words to a shared flavor space — drinks first, then bottles. No chat required.
+      </p>
     </div>
 
-    <section class="landing__starters" aria-labelledby="starters-heading">
-      <h2 id="starters-heading" class="landing__starters-heading">Try a starter phrase</h2>
-      <mat-chip-set class="landing__chips" aria-label="Example taste phrases">
+    <section class="mt-10" aria-labelledby="starters-heading">
+      <h2 id="starters-heading" class="mb-3 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Try a taste</h2>
+      <mat-chip-set class="flex flex-wrap gap-2" aria-label="Example flavor phrases">
         @for (s of tasteStarters; track s.text) {
-          <mat-chip class="landing__chip" (click)="useStarter(s.text)" tabindex="0" (keydown.enter)="useStarter(s.text)">
+          <mat-chip
+            class="!font-body !rounded-full !bg-surface-alt !border !border-border !text-ink cursor-pointer hover:!bg-[oklch(0.92_0.025_200)] hover:!border-accent/30"
+            (click)="useStarter(s.text)"
+            tabindex="0"
+            (keydown.enter)="useStarter(s.text)"
+          >
             {{ s.label }}
           </mat-chip>
         }
       </mat-chip-set>
     </section>
 
-    <p class="landing__footer-note">
-      Already chatting?
-      <a routerLink="/liquor-recommendations" class="landing__link">Continue in taste chat</a>
+    <p class="mt-10 mb-0 text-[0.9rem] text-ink-soft">
+      Already stocking shelves?
+      <a routerLink="/cabinet" class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:text-accent hover:underline">Edit session cabinet</a>
     </p>
   </div>
 </div>

@@ -38,7 +38,7 @@ describe('LiquorScoring', () => {
       const tags = row.liquor.tags.map((t) => t.toLowerCase());
       const hasBright = tags.some((t) => brightOrCitrus.includes(t));
       const hasDry = tags.some((t) => dryish.includes(t));
-      expect(hasBright && hasDry).withContext(row.liquor.name).toBe(true);
+      expect(hasBright && hasDry).toBe(true);
     }
   });
 

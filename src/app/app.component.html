@@ -1,31 +1,55 @@
-<div class="app-shell">
-  <header class="app-shell__header">
-    <div class="app-shell__brand">
-      <h1 class="app-shell__title">{{ title }}</h1>
-      <p class="app-shell__tagline">Taste keywords → ranked bottles</p>
+<div class="min-h-screen flex flex-col bg-surface text-ink">
+  <header
+    class="flex flex-wrap items-end justify-between gap-4 gap-x-8 px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(1rem,3vw,1.5rem)] bg-shell-header text-shell-ink"
+  >
+    <div class="flex flex-col gap-1">
+      <h1 class="m-0 font-script text-[clamp(1.35rem,3.5vw,1.85rem)] font-normal leading-tight tracking-wide">{{ title }}</h1>
+      <p class="m-0 text-xs font-medium tracking-[0.08em] uppercase opacity-80 font-body">By the drink · by the bottle</p>
     </div>
-    <nav class="app-shell__nav" aria-label="Main">
+    <nav class="flex flex-wrap gap-x-4 gap-y-2" aria-label="Main">
       <a
         routerLink="/welcome"
-        routerLinkActive="app-shell__navlink--active"
+        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="app-shell__navlink"
+        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
       >
-        <mat-icon aria-hidden="true">palette</mat-icon>
+        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">home</mat-icon>
         <span>Start</span>
       </a>
-      <a routerLink="/liquor-recommendations" routerLinkActive="app-shell__navlink--active" class="app-shell__navlink">
-        <mat-icon aria-hidden="true">chat_bubble</mat-icon>
-        <span>Taste chat</span>
+      <a
+        routerLink="/discover/drinks"
+        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
+        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
+      >
+        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">local_bar</mat-icon>
+        <span>Drinks</span>
+      </a>
+      <a
+        routerLink="/discover/bottles"
+        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
+        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
+      >
+        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">liquor</mat-icon>
+        <span>Bottles</span>
+      </a>
+      <a
+        routerLink="/cabinet"
+        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
+        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
+      >
+        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">inventory_2</mat-icon>
+        <span>Cabinet</span>
       </a>
     </nav>
   </header>
 
-  <main class="app-shell__main">
+  <main class="flex-1 w-full max-w-shell mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,3vw,2rem)]">
     <router-outlet />
   </main>
 
-  <footer class="app-shell__footer">
-    <p class="app-shell__footer-text">© {{ currentYear }} Classic Cocktail Cabinet — flavor-guided picks from our catalog.</p>
+  <footer class="px-[clamp(1.25rem,4vw,2.5rem)] py-4 bg-shell-footer border-t border-border">
+    <p class="m-0 text-center text-[0.8125rem] text-shell-footer-text font-body">
+      © {{ currentYear }} Classic Cocktail Cabinet — drinks, bottles, and flavor from our catalog.
+    </p>
   </footer>
 </div>

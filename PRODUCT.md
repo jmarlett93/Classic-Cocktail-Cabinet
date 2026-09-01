@@ -10,18 +10,18 @@ This file aligns **what the product claims to do**, **what the codebase actually
 
 ## Elevator pitch (as implemented today)
 
-An Angular 19 single-page app with a welcome screen and a **liquor recommendation chat** that matches free-text input against a **static in-browser catalog** of spirits and liqueurs using a **custom embedding + in-memory vector search** pipeline, plus **rule-based NLP templates** for canned explanations.
+An Angular 19 single-page app for **two-modal discovery**: browse **by the drink** or **by the bottle**, enter from a **flavor**, and maintain a **session cabinet**. Ranking uses weighted bottle/drink catalogs, composed drink flavor, possible/likely similarity, and weighted unlock — deterministic, no LLM on the product path. Legacy taste-chat remains at `/liquor-recommendations` but is not promoted in chrome.
 
 ---
 
 ## Stated value proposition (from UX copy)
 
-The landing page tells users the product will help them:
+The landing page offers:
 
-1. **Stock a cocktail cabinet** — curate what to buy or keep on hand.
-2. **Discover recipes from what they already have** — inventory-driven recipe discovery.
-
-Neither path is fully implemented: there is **no recipe content**, **no cabinet/inventory model**, and **no journey** from the landing prompt into the chat experience.
+1. **By the drink** — find a classic, see composed flavor and required bottles.
+2. **By the bottle** — see what a bottle completes and what to buy next (unlock).
+3. **Flavor entry** — map taste words to labeled drink then bottle recommendations.
+4. **Session cabinet** — mark bottles you have for this visit.
 
 ---
 
@@ -33,7 +33,7 @@ Neither path is fully implemented: there is **no recipe content**, **no cabinet/
 | Curious drinker | “Explain what I might like and why, without reading a textbook.” |
 | Cabinet optimizer | “Given what I own, what can I make or what am I one bottle away from?” |
 
-Today the app primarily serves the **first persona partially** (bottle suggestions only, no drinks).
+Primary paths now serve all three personas in-browser (session-scoped cabinet; no accounts).
 
 ---
 
@@ -41,10 +41,14 @@ Today the app primarily serves the **first persona partially** (bottle suggestio
 
 | Surface | Route | What it does |
 |--------|-------|----------------|
-| Welcome / “adventure” | `/welcome` | Copy + text field + chips. On Enter, stores text in `UserPromptInfoStore` only. **No link** to recommendations or recipes. |
-| Liquor recommendations | `/liquor-recommendations` | Chat UI; calls recommendation agent; shows suggested `Liqour` rows and NLP-derived copy. |
+| Welcome | `/welcome` | Two-path entry (drink / bottle) + flavor search into `/discover/flavor?q=` |
+| Drink browse / detail | `/discover/drinks`, `/discover/drinks/:id` | Fuzzy name browse; composed flavor + bottle list + nearby drinks |
+| Bottle browse / detail | `/discover/bottles`, `/discover/bottles/:id` | Completeness (owned ∪ focus), unlock block, flavor neighbors |
+| Flavor results | `/discover/flavor` | Likely then possible; drinks group then bottles |
+| Session cabinet | `/cabinet` | Owned / focus / flavor terms for the visit |
+| Legacy taste chat | `/liquor-recommendations` | Retained but not in primary nav |
 
-Global chrome: header nav between Home and Liquor Recommendations.
+Global chrome: Start · Drinks · Bottles · Cabinet.
 
 ---
 
@@ -52,11 +56,11 @@ Global chrome: header nav between Home and Liquor Recommendations.
 
 | Capability | Claimed (copy / name) | Delivered | Gap severity |
 |------------|------------------------|-----------|--------------|
-| Classic cocktails | Implied by product name | No recipe dataset; `recipeBook` is empty | **Critical** |
-| Recipe discovery from inventory | Landing copy | No inventory entity, no recipes | **Critical** |
-| Cabinet stocking guidance | Landing copy | Partial: can suggest bottles from taste text only | **High** |
-| Conversational continuity | Chat UX + LangChain `BufferMemory` | Memory exists but **NLP runs on formatted prompt text**, not cleanly on user turns; landing input never seeds chat | **High** |
-| Personalized “adventure” | Chips + placeholder | Chips only fill the input; preferences store field unused | **Medium** |
+| Classic cocktails | Product name + drink path | ~20 authored drinks with joins | **Low** |
+| Recipe discovery from inventory | Cabinet + completeness | Session cabinet; complete / one-away on bottle detail | **Low** |
+| Cabinet stocking guidance | Unlock on bottle detail | Weighted unlock with counts + names | **Low** |
+| Flavor guidance | Flavor entry | Synonym → vector → possible/likely | **Low** |
+| Taste chat as product | Abandoned Direction B | Legacy route only; chrome retired | **N/A** |
 
 ---
 

@@ -1,0 +1,230 @@
+<div
+  class="min-h-full max-w-discover mx-auto px-[clamp(0.25rem,1vw,0.5rem)] py-[clamp(1.25rem,3vw,2rem)] text-ink font-body"
+>
+  @if (bottle(); as bottle) {
+    <header>
+      <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent-deep">By the bottle</p>
+      <h1 class="mb-3 text-[clamp(1.55rem,3.5vw,2.15rem)] font-bold leading-[1.15] tracking-tight">{{ displayName() }}</h1>
+      <p class="mb-6 max-w-[52ch] text-[1.02rem] leading-relaxed text-ink-soft">{{ bottle.description }}</p>
+      <p class="flex flex-wrap gap-x-4 gap-y-2 mb-4 text-[0.8125rem] text-ink-soft">
+        <span>{{ bottle.kind }}</span>
+        <span>{{ bottle.spiritFamily }}</span>
+        <span>{{ bottle.typicalRole }}</span>
+      </p>
+      <div class="flex flex-wrap gap-3 items-center mt-5">
+        <button type="button" mat-flat-button color="primary" (click)="toggleOwned()">
+          {{ cabinet.isOwned(bottle.id) ? 'Remove from cabinet' : 'I have this' }}
+        </button>
+        <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/cabinet">Manage full cabinet</a>
+      </div>
+    </header>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="bottle-flavor-heading">
+      <h2 id="bottle-flavor-heading" class="m-0 mb-3 text-[1.05rem] font-bold">Bottle flavor</h2>
+      <clsc-flavor-profile [weights]="bottle.flavor" heading="Liquid in the bottle" />
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="bottle-complete-heading">
+      <h2 id="bottle-complete-heading" class="m-0 mb-3 text-[1.05rem] font-bold">
+        Drinks you can make
+        <span class="font-script text-lg font-normal text-accent-deep">with cabinet ∪ this bottle</span>
+      </h2>
+      <p class="mb-4 text-sm text-ink-soft">Completeness uses your owned bottles plus this focus bottle.</p>
+      @if (completeness().complete.length) {
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (drink of completeness().complete; track drink.id) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/drinks', drink.id]"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="m-0 text-[1.05rem] font-bold">{{ drink.name }}</p>
+                <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-complete-bg text-complete">
+                  Complete
+                </span>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+          No complete drinks yet with this bottle and your session cabinet. Check one-bottle-away or unlock below.
+        </p>
+      }
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="bottle-away-heading">
+      <h2 id="bottle-away-heading" class="m-0 mb-3 text-[1.05rem] font-bold">One bottle away</h2>
+      @if (completeness().oneAway.length) {
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (drink of completeness().oneAway; track drink.id) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/drinks', drink.id]"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="m-0 text-[1.05rem] font-bold">{{ drink.name }}</p>
+                <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-away-bg text-away-text">
+                  One away
+                </span>
+              </div>
+              <p class="m-0 text-sm text-ink-soft leading-snug">Missing: {{ drink.missingNames.join(', ') }}</p>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+          Nothing is exactly one bottle away from complete.
+        </p>
+      }
+    </section>
+
+    <section
+      class="p-5 mb-6 border border-unlock-border rounded-[0.85rem] bg-unlock-bg"
+      aria-labelledby="bottle-unlock-heading"
+    >
+      <h2 id="bottle-unlock-heading" class="m-0 mb-3 text-[1.05rem] font-bold">
+        What to buy next
+        <span class="font-script text-lg font-normal text-accent-deep">unlock</span>
+      </h2>
+      <p class="mb-4 text-sm text-ink-soft">
+        Mechanical coverage — labeled separately from flavor neighbors. Ranked by newly completable drinks,
+        seed-as-lead, and optional session flavor fit.
+      </p>
+      @if (unlockCandidates().length) {
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (candidate of unlockCandidates(); track candidate.bottleId) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/bottles', candidate.bottleId]"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="m-0 text-[1.05rem] font-bold">{{ candidate.name }}</p>
+                <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-unlock-badge text-unlock-badge-text">
+                  +{{ candidate.unlockCount }} drink{{ candidate.unlockCount === 1 ? '' : 's' }}
+                </span>
+              </div>
+              <p class="m-0 text-sm text-ink-soft leading-snug">Unlocks: {{ candidate.unlockedNames.join(', ') }}</p>
+              <p class="m-0 text-sm text-ink-soft leading-snug">
+                Score {{ candidate.weightedScore | number: '1.0-2' }}
+                · seed-as-lead {{ candidate.seedAsLeadCount }}
+                · flavor fit {{ candidate.avgFlavorFit | number: '1.0-2' }}
+              </p>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+          No next bottle improves how many drinks you can complete from here. Add bottles to your cabinet, or try another focus.
+        </p>
+      }
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="bottle-likely-drinks-heading">
+      <h2 id="bottle-likely-drinks-heading" class="m-0 mb-3 text-[1.05rem] font-bold">Likely drinks (flavor)</h2>
+      <p class="mb-4 text-sm text-ink-soft">Taste fit for drinks that include this bottle — not unlock.</p>
+      @if (likelyDrinks().length) {
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (drink of likelyDrinks(); track drink.id) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/drinks', drink.id]"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="m-0 text-[1.05rem] font-bold">{{ drink.primaryName }}</p>
+                <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-likely-bg text-accent-deep">
+                  Likely
+                </span>
+              </div>
+              @if (drink.reasons.length) {
+                <ul class="mt-1.5 mb-0 p-0 list-none text-[0.8125rem] text-ink-soft [&>li]:before:content-['·_'] [&>li]:before:font-bold">
+                  @for (reason of drink.reasons; track reason) {
+                    <li>{{ reason }}</li>
+                  }
+                </ul>
+              }
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+          No strong flavor-fit drinks for this bottle.
+        </p>
+      }
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="bottle-neighbors-heading">
+      <h2 id="bottle-neighbors-heading" class="m-0 mb-3 text-[1.05rem] font-bold">Nearby bottles (flavor)</h2>
+      <p class="mb-4 text-sm text-ink-soft">Separate from unlock — bottles that sit near this one in flavor space.</p>
+      @if (neighbors().likely.length) {
+        <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Likely</h3>
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (near of neighbors().likely; track near.id) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/bottles', near.id]"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="m-0 text-[1.05rem] font-bold">{{ near.primaryName }}</p>
+                <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-likely-bg text-accent-deep">
+                  Likely
+                </span>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">No likely flavor neighbors.</p>
+      }
+
+      @if (neighbors().possible.length) {
+        <div class="flex flex-wrap gap-3 items-center mt-5">
+          <button type="button" mat-button (click)="togglePossibleNeighbors()">
+            {{ showPossibleNeighbors() ? 'Hide' : 'Show' }} possible neighbors
+          </button>
+        </div>
+        @if (showPossibleNeighbors()) {
+          <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Possible</h3>
+          <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+            @for (near of neighbors().possible; track near.id) {
+              <a
+                role="listitem"
+                class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+                [routerLink]="['/discover/bottles', near.id]"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <p class="m-0 text-[1.05rem] font-bold">{{ near.primaryName }}</p>
+                  <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-possible-bg text-ink-soft">
+                    Possible
+                  </span>
+                </div>
+              </a>
+            }
+          </div>
+        }
+      }
+    </section>
+
+    <p>
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/bottles">All bottles</a>
+      ·
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/drinks">By the drink</a>
+      ·
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/cabinet">Session cabinet</a>
+    </p>
+  } @else {
+    <header>
+      <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent-deep">By the bottle</p>
+      <h1 class="mb-3 text-[clamp(1.55rem,3.5vw,2.15rem)] font-bold leading-[1.15] tracking-tight">Bottle not found</h1>
+      <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+        That bottle is not in the catalog.
+        <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/bottles">Browse bottles</a>
+      </p>
+    </header>
+  }
+</div>

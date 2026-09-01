@@ -1,29 +1,18 @@
-import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { render, screen } from '@testing-library/angular';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+  it('promotes two-mode discovery nav and not taste chat', async () => {
+    await render(AppComponent, {
+      providers: [provideRouter([])],
+    });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'classic-cocktail-cabinet' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('classic-cocktail-cabinet');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, classic-cocktail-cabinet');
+    expect(screen.getByRole('heading', { name: /Classic Cocktail Cabinet/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Drinks/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Bottles/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Cabinet/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Taste chat/i })).not.toBeInTheDocument();
   });
 });

@@ -1,0 +1,146 @@
+<div
+  class="min-h-full max-w-discover mx-auto px-[clamp(0.25rem,1vw,0.5rem)] py-[clamp(1.25rem,3vw,2rem)] text-ink font-body"
+>
+  @if (drink(); as drink) {
+    <header>
+      <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent-deep">By the drink</p>
+      <h1 class="mb-3 text-[clamp(1.55rem,3.5vw,2.15rem)] font-bold leading-[1.15] tracking-tight">{{ displayName() }}</h1>
+      <p class="mb-6 max-w-[52ch] text-[1.02rem] leading-relaxed text-ink-soft">{{ drink.description }}</p>
+      <p class="flex flex-wrap gap-x-4 gap-y-2 mb-4 text-[0.8125rem] text-ink-soft">
+        <span>{{ drink.method }}</span>
+        <span>{{ drink.glass }}</span>
+        <span>{{ drink.drinkFamily }}</span>
+      </p>
+    </header>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="drink-flavor-heading">
+      <h2 id="drink-flavor-heading" class="m-0 mb-3 text-[1.05rem] font-bold">
+        How it tastes
+        <span class="font-script text-lg font-normal text-accent-deep">composed</span>
+      </h2>
+      @if (composedViews(); as views) {
+        <clsc-flavor-profile [weights]="views.composed" heading="Finished drink" />
+        <div class="flex flex-wrap gap-3 items-center mt-5">
+          <button type="button" mat-stroked-button (click)="toggleSplit()">
+            {{ showSplit() ? 'Hide' : 'Show' }} from bottles vs how it’s made
+          </button>
+        </div>
+        @if (showSplit()) {
+          <div class="grid gap-5 mt-5 sm:grid-cols-2">
+            <clsc-flavor-profile [weights]="views.inherited" heading="From the bottles" />
+            <clsc-flavor-profile [weights]="drink.flavor.authored" heading="From prep & garnish" />
+          </div>
+        }
+      }
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="drink-bottles-heading">
+      <h2 id="drink-bottles-heading" class="m-0 mb-3 text-[1.05rem] font-bold">Bottles you need</h2>
+      <ul class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+        @for (row of bottleRows(); track row.id) {
+          <li
+            class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised cursor-default hover:transform-none"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <a
+                class="m-0 text-[1.05rem] font-bold font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent"
+                [routerLink]="['/discover/bottles', row.id]"
+                (click)="focusBottle(row.id)"
+              >
+                {{ row.name }}
+              </a>
+              <span
+                class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase"
+                [class.bg-complete-bg]="row.owned"
+                [class.text-complete]="row.owned"
+                [class.bg-possible-bg]="!row.owned"
+                [class.text-ink-soft]="!row.owned"
+              >
+                {{ row.owned ? 'In cabinet' : row.role }}
+              </span>
+            </div>
+            <p class="m-0 text-sm text-ink-soft leading-snug">{{ row.amountMl }} ml · {{ row.role }}</p>
+            <clsc-flavor-profile [weights]="row.flavor" heading="Bottle flavor" />
+            <div class="flex flex-wrap gap-3 items-center mt-5">
+              <button type="button" mat-button (click)="toggleOwned(row.id)">
+                {{ row.owned ? 'Remove from cabinet' : 'I have this' }}
+              </button>
+              <a
+                class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent"
+                [routerLink]="['/discover/bottles', row.id]"
+                (click)="focusBottle(row.id)"
+              >
+                Open bottle · unlock
+              </a>
+            </div>
+          </li>
+        }
+      </ul>
+      @if (stapleRows().length) {
+        <p class="mb-4 text-sm text-ink-soft">Kitchen staples (assumed on hand):</p>
+        <ul class="mt-1.5 mb-0 p-0 list-none text-[0.8125rem] text-ink-soft [&>li]:before:content-['·_'] [&>li]:before:font-bold">
+          @for (staple of stapleRows(); track staple.id) {
+            <li>{{ staple.name }} — {{ staple.amountMl }} ml ({{ staple.role }})</li>
+          }
+        </ul>
+      }
+      @if (missingBottles().length) {
+        <p class="mb-4 text-sm text-ink-soft">
+          Still missing {{ missingBottles().length }} bottle{{ missingBottles().length === 1 ? '' : 's' }} for this drink
+          given your session cabinet.
+        </p>
+      }
+    </section>
+
+    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="drink-instructions-heading">
+      <h2 id="drink-instructions-heading" class="m-0 mb-3 text-[1.05rem] font-bold">How to make it</h2>
+      <p class="m-0 max-w-[60ch] text-[0.95rem] leading-relaxed text-ink whitespace-pre-wrap">{{ drink.instructions }}</p>
+    </section>
+
+    <section class="mb-8" aria-labelledby="drink-nearby-heading">
+      <h2 id="drink-nearby-heading" class="mb-1.5 text-lg font-bold">Nearby drinks</h2>
+      <p class="mb-4 text-sm text-ink-soft">Similar composed flavor — not unlock math.</p>
+      @if (nearbyDrinks().length) {
+        <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
+          @for (near of nearbyDrinks(); track near.id) {
+            <a
+              role="listitem"
+              class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
+              [routerLink]="['/discover/drinks', near.id]"
+            >
+              <p class="m-0 text-[1.05rem] font-bold">{{ near.primaryName }}</p>
+              @if (near.reasons.length) {
+                <ul class="mt-1.5 mb-0 p-0 list-none text-[0.8125rem] text-ink-soft [&>li]:before:content-['·_'] [&>li]:before:font-bold">
+                  @for (reason of near.reasons; track reason) {
+                    <li>{{ reason }}</li>
+                  }
+                </ul>
+              }
+            </a>
+          }
+        </div>
+      } @else {
+        <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+          No nearby drinks with a strong flavor overlap.
+        </p>
+      }
+    </section>
+
+    <p>
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/drinks">All drinks</a>
+      ·
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/bottles">By the bottle</a>
+      ·
+      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/cabinet">Session cabinet</a>
+    </p>
+  } @else {
+    <header>
+      <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent-deep">By the drink</p>
+      <h1 class="mb-3 text-[clamp(1.55rem,3.5vw,2.15rem)] font-bold leading-[1.15] tracking-tight">Drink not found</h1>
+      <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
+        That drink is not in the catalog.
+        <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/drinks">Browse drinks</a>
+      </p>
+    </header>
+  }
+</div>

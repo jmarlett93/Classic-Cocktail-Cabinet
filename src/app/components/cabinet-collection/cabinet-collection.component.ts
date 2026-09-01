@@ -14,6 +14,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { RouterLink } from '@angular/router';
 
 import { loadCatalogBundle } from '../../core-services/catalog/catalog-bundle';
+import { resolveFlavorQuery } from '../../core-services/discovery/flavor-query';
 import { CabinetStore } from '../../stores/cabinet-store';
 
 interface CatalogBottleOption {
@@ -33,7 +34,6 @@ interface CatalogBottleOption {
     RouterLink,
   ],
   templateUrl: './cabinet-collection.component.html',
-  styleUrl: './cabinet-collection.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CabinetCollectionComponent implements OnInit {
@@ -75,6 +75,8 @@ export class CabinetCollectionComponent implements OnInit {
       .map((term) => term.trim())
       .filter((term) => term.length > 0);
     this.cabinet.setFlavorTerms(terms);
+    const vector = resolveFlavorQuery(terms.join(' and '), loadCatalogBundle().synonyms);
+    this.cabinet.setFlavorVector(vector);
   }
 
   clearSession(): void {
