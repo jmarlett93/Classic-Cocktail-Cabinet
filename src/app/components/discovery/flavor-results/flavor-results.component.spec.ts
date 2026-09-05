@@ -40,7 +40,7 @@ describe('FlavorResultsComponent', () => {
       ],
     });
 
-    expect(screen.getByText(/don’t recognize/i)).toBeInTheDocument();
+    expect(screen.getByText(/don't recognize/i)).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /^Drinks$/i })).not.toBeInTheDocument();
   });
 });

@@ -11,7 +11,7 @@ describe('LandingPageComponent', () => {
       providers: [provideRouter([])],
     });
 
-    expect(screen.getByRole('heading', { name: /Two ways in/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Choose the bottle/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /By the drink/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /By the bottle/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Open taste chat/i })).not.toBeInTheDocument();
@@ -25,8 +25,8 @@ describe('LandingPageComponent', () => {
     const router = fixture.debugElement.injector.get(Router);
     const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
-    await user.type(screen.getByLabelText(/Or start from a flavor/i), 'bitter');
-    await user.click(screen.getByRole('button', { name: /Taste it/i }));
+    await user.type(screen.getByLabelText(/What should the first sip feel like/i), 'bitter');
+    await user.click(screen.getByRole('button', { name: /Find matches/i }));
 
     expect(navigate).toHaveBeenCalledWith(['/discover/flavor'], {
       queryParams: { q: 'bitter' },

@@ -4,13 +4,9 @@ import {
   computed,
   inject,
   OnInit,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
 import { RouterLink } from '@angular/router';
 
 import { loadCatalogBundle } from '../../core-services/catalog/catalog-bundle';
@@ -20,33 +16,53 @@ import { CabinetStore } from '../../stores/cabinet-store';
 interface CatalogBottleOption {
   id: string;
   displayName: string;
+  family: string;
+}
+
+interface BottleFamilyGroup {
+  family: string;
+  bottles: CatalogBottleOption[];
 }
 
 @Component({
   selector: 'clsc-cabinet-collection',
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    RouterLink,
-  ],
+  imports: [FormsModule, RouterLink],
   templateUrl: './cabinet-collection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CabinetCollectionComponent implements OnInit {
   readonly cabinet = inject(CabinetStore);
+  readonly bottleQuery = signal('');
 
   readonly bottles = computed<CatalogBottleOption[]>(() =>
     loadCatalogBundle()
       .bottles.map((bottle) => ({
         id: bottle.id,
         displayName: bottle.names[0] ?? bottle.id,
+        family: this.formatFamily(bottle.spiritFamily),
       }))
       .sort((a, b) => a.displayName.localeCompare(b.displayName)),
   );
+
+  readonly filteredBottles = computed(() => {
+    const q = this.bottleQuery().trim().toLowerCase();
+    if (!q) {
+      return this.bottles();
+    }
+    return this.bottles().filter((bottle) =>
+      `${bottle.displayName} ${bottle.family}`.toLowerCase().includes(q),
+    );
+  });
+
+  readonly bottleGroups = computed<BottleFamilyGroup[]>(() => {
+    const groups = new Map<string, CatalogBottleOption[]>();
+    for (const bottle of this.filteredBottles()) {
+      groups.set(bottle.family, [...(groups.get(bottle.family) ?? []), bottle]);
+    }
+    return Array.from(groups.entries())
+      .map(([family, bottles]) => ({ family, bottles }))
+      .sort((a, b) => a.family.localeCompare(b.family));
+  });
 
   readonly effectiveHaveSet = this.cabinet.effectiveHaveSet;
   readonly ownedCount = computed(() => this.cabinet.ownedBottleIds().length);
@@ -65,8 +81,8 @@ export class CabinetCollectionComponent implements OnInit {
     this.cabinet.setOwned(bottleId, checked);
   }
 
-  onFocusChange(bottleId: string | null): void {
-    this.cabinet.setFocus(bottleId);
+  setBottleQuery(value: string): void {
+    this.bottleQuery.set(value);
   }
 
   applyFlavorTerms(): void {
@@ -82,5 +98,16 @@ export class CabinetCollectionComponent implements OnInit {
   clearSession(): void {
     this.cabinet.resetSession();
     this.flavorTermsInput = '';
+  }
+
+  familyDomId(family: string): string {
+    return `cabinet-family-${family.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  }
+
+  private formatFamily(value: string): string {
+    return value
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 }

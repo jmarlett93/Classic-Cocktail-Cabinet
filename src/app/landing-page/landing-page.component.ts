@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { Router, RouterLink } from '@angular/router';
 
 import { loadCatalogBundle } from '../core-services/catalog/catalog-bundle';
@@ -10,7 +8,7 @@ import { CabinetStore } from '../stores/cabinet-store';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [FormsModule, MatChipsModule, MatButtonModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './landing-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,7 +24,7 @@ export class LandingPageComponent {
     { label: 'Smoky', text: 'smoky' },
   ] as const;
 
-  readonly placeholderText = signal('Try: citrus, dry, bitter, herbal…');
+  readonly placeholderText = signal('Try: citrus, dry, bitter, herbal...');
   readonly inputText = signal('');
 
   setInput(value: string): void {

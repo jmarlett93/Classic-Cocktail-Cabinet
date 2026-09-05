@@ -8,7 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { loadCatalogBundle } from '../../../core-services/catalog/catalog-bundle';
+import { composeDrinkFlavorV1 } from '../../../core-services/discovery/compose-drink-flavor';
 import { fuzzyMatchNames } from '../../../core-services/discovery/flavor-query';
+import { FlavorWeights } from '../../../models/catalog-types';
 import { DrinkRecord } from '../../../models/catalog-types';
 
 @Component({
@@ -32,6 +34,18 @@ export class DrinkBrowseComponent {
 
   displayName(drink: DrinkRecord): string {
     return drink.names[0] ?? drink.id;
+  }
+
+  topFlavorLabels(drink: DrinkRecord): string[] {
+    return this.topLabels(composeDrinkFlavorV1(drink, this.bundle).composed);
+  }
+
+  private topLabels(weights: FlavorWeights): string[] {
+    return Object.entries(weights)
+      .filter(([, weight]) => typeof weight === 'number' && weight > 0)
+      .sort(([, a], [, b]) => (b ?? 0) - (a ?? 0))
+      .slice(0, 3)
+      .map(([id]) => id);
   }
 
   setQuery(value: string): void {

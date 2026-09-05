@@ -1,87 +1,92 @@
-<div class="min-h-full max-w-cabinet mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.5rem,4vw,2.5rem)] text-ink font-body">
-  <header class="mb-8">
-    <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent">Session cabinet</p>
-    <h1 class="mb-3 text-[clamp(1.5rem,3.5vw,2rem)] font-bold leading-[1.15]">What bottles do you have on hand?</h1>
-    <p class="m-0 text-[0.95rem] leading-normal text-ink-soft">
-      Toggle bottles you own for this visit. Your focus bottle is included in the effective have-set even when it is not owned.
+<div class="page-flow page-flow--cabinet">
+  <header>
+    <p class="eyebrow text-accent-warm">Your cabinet</p>
+    <h1 class="page-title mt-3">What is on your shelf?</h1>
+    <p class="lede mt-5">
+      Check the bottles you have for this visit. Discovery uses these to say what you can make and what one bottle would open next.
     </p>
-    <p class="mt-3 mb-0 text-[0.95rem] font-semibold leading-normal text-ink-soft" aria-live="polite">
-      {{ ownedCount() }} owned · {{ effectiveHaveSet().length }} in effective have-set
+    <p class="mt-5 text-sm font-bold text-ink-soft" aria-live="polite">
+      {{ ownedCount() }} bottle{{ ownedCount() === 1 ? '' : 's' }} on your shelf
+      @if (cabinet.focusBottleId()) {
+        <span> · focused bottle included while you browse</span>
+      }
     </p>
   </header>
 
-  <section class="mb-6 p-5 border border-border rounded-xl bg-white" aria-labelledby="cabinet-owned-heading">
-    <h2 id="cabinet-owned-heading" class="mb-4 text-[1.05rem] font-semibold">Catalog bottles</h2>
-    <ul class="list-none m-0 p-0" role="list">
-      @for (bottle of bottles(); track bottle.id) {
-        <li
-          class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 pb-3 mb-3 border-b border-border last:mb-0 last:pb-0 last:border-b-0"
-        >
-          <mat-checkbox
-            class="row-start-1 col-start-1"
-            [checked]="cabinet.isOwned(bottle.id)"
-            (change)="onOwnedChange(bottle.id, $event.checked)"
-            [attr.aria-label]="'I have ' + bottle.displayName"
-          >
-            I have this
-          </mat-checkbox>
-          <span class="row-start-1 col-start-2 font-semibold">{{ bottle.displayName }}</span>
-          <span class="row-start-2 col-start-2 text-xs text-ink-soft">{{ bottle.id }}</span>
-        </li>
-      }
-    </ul>
+  <section class="quiet-panel" aria-labelledby="cabinet-flavor-heading">
+    <div class="grid gap-5 lg:grid-cols-[11rem_minmax(0,1fr)]">
+      <div>
+        <h2 id="cabinet-flavor-heading" class="section-kicker">Flavor preference</h2>
+      </div>
+      <div class="flex flex-col gap-3">
+        <label class="text-sm font-bold text-ink" for="cabinet-flavor">Optional taste words for this visit</label>
+        <input
+          id="cabinet-flavor"
+          class="min-h-12 rounded-full border border-border bg-[oklch(0.995_0.006_220)] px-5 text-base text-ink outline-none transition placeholder:text-ink-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_4px_oklch(0.66_0.09_190_/_0.24)] motion-reduce:transition-none"
+          [(ngModel)]="flavorTermsInput"
+          (blur)="applyFlavorTerms()"
+          (keydown.enter)="applyFlavorTerms()"
+          placeholder="bright, dry, herbal"
+          aria-describedby="cabinet-flavor-hint"
+        />
+        <p id="cabinet-flavor-hint" class="m-0 text-sm leading-6 text-ink-soft">
+          We use these words to nudge unlock recommendations and
+          <a routerLink="/discover/flavor" class="action-link">flavor discovery</a>.
+        </p>
+      </div>
+    </div>
   </section>
 
-  <section class="mb-6 p-5 border border-border rounded-xl bg-white" aria-labelledby="cabinet-focus-heading">
-    <h2 id="cabinet-focus-heading" class="mb-4 text-[1.05rem] font-semibold">Focus bottle</h2>
-    <mat-radio-group
-      class="flex flex-col gap-1.5"
-      [value]="cabinet.focusBottleId()"
-      (change)="onFocusChange($event.value)"
-      aria-label="Focus bottle for this visit"
-    >
-      <mat-radio-button [value]="null">No focus</mat-radio-button>
-      @for (bottle of bottles(); track bottle.id) {
-        <mat-radio-button [value]="bottle.id">{{ bottle.displayName }}</mat-radio-button>
-      }
-    </mat-radio-group>
-  </section>
+  <section class="surface-rule" aria-labelledby="cabinet-owned-heading">
+    <div class="grid gap-5 lg:grid-cols-[11rem_minmax(0,1fr)]">
+      <div>
+        <h2 id="cabinet-owned-heading" class="section-kicker">Shelf bottles</h2>
+      </div>
+      <div class="flex flex-col gap-5">
+        <label class="sr-only" for="cabinet-search">Search bottles</label>
+        <input
+          id="cabinet-search"
+          type="search"
+          class="min-h-12 rounded-full border border-border bg-surface-raised px-5 text-base text-ink outline-none transition placeholder:text-ink-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_4px_oklch(0.66_0.09_190_/_0.24)] motion-reduce:transition-none"
+          [value]="bottleQuery()"
+          (input)="setBottleQuery(($any($event.target)).value)"
+          placeholder="Search gin, rye, vermouth..."
+          autocomplete="off"
+        />
 
-  <section class="mb-6 p-5 border border-border rounded-xl bg-white" aria-labelledby="cabinet-flavor-heading">
-    <h2 id="cabinet-flavor-heading" class="mb-4 text-[1.05rem] font-semibold">Flavor terms (optional)</h2>
-    <mat-form-field class="w-full" appearance="outline">
-      <mat-label>Comma-separated flavor terms</mat-label>
-      <input
-        matInput
-        [(ngModel)]="flavorTermsInput"
-        (blur)="applyFlavorTerms()"
-        (keydown.enter)="applyFlavorTerms()"
-        placeholder="bright, dry, herbal"
-        aria-describedby="cabinet-flavor-hint"
-      />
-    </mat-form-field>
-    <p id="cabinet-flavor-hint" class="m-0 text-[0.95rem] leading-normal text-ink-soft">
-      Stored for this visit — used by unlock flavor-fit and
-      <a routerLink="/discover/flavor" class="text-sm font-semibold text-accent no-underline hover:underline">flavor discovery</a>.
-    </p>
-  </section>
-
-  <section class="mb-6 p-5 border border-border rounded-xl bg-white" aria-labelledby="cabinet-effective-heading">
-    <h2 id="cabinet-effective-heading" class="mb-4 text-[1.05rem] font-semibold">Effective have-set</h2>
-    <p class="m-0 text-[0.95rem] leading-normal text-ink-soft">Owned ∪ focus — exposed for completeness and unlock consumers.</p>
-    @if (effectiveHaveSet().length) {
-      <ul class="mt-2 mb-0 pl-5 text-sm" role="list">
-        @for (id of effectiveHaveSet(); track id) {
-          <li>{{ id }}</li>
+        @if (bottleGroups().length) {
+          <div class="grid gap-8 md:grid-cols-2" role="list">
+            @for (group of bottleGroups(); track group.family) {
+              <section class="quiet-panel p-5" [attr.aria-labelledby]="familyDomId(group.family)">
+                <h3 [id]="familyDomId(group.family)" class="section-kicker">{{ group.family }}</h3>
+                <ul class="mt-4 flex list-none flex-col divide-y divide-border p-0" role="list">
+                  @for (bottle of group.bottles; track bottle.id) {
+                    <li class="py-3 first:pt-0 last:pb-0">
+                      <label class="grid cursor-pointer grid-cols-[auto_1fr] items-center gap-3">
+                        <input
+                          type="checkbox"
+                          class="h-5 w-5 accent-[oklch(0.43_0.11_198)]"
+                          [checked]="cabinet.isOwned(bottle.id)"
+                          (change)="onOwnedChange(bottle.id, $any($event.target).checked)"
+                          [attr.aria-label]="'I have ' + bottle.displayName"
+                        />
+                        <span class="font-bold text-ink">{{ bottle.displayName }}</span>
+                      </label>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        } @else {
+          <p class="empty-state">No bottles match that search.</p>
         }
-      </ul>
-    } @else {
-      <p class="m-0 text-[0.95rem] leading-normal text-ink-soft">No bottles in the effective have-set yet.</p>
-    }
+      </div>
+    </div>
   </section>
 
   <footer class="flex flex-wrap items-center gap-4">
-    <button type="button" mat-stroked-button (click)="clearSession()">Clear session cabinet</button>
-    <a routerLink="/welcome" class="text-sm font-semibold text-accent no-underline hover:underline">Back to welcome</a>
+    <button type="button" class="secondary-button" (click)="clearSession()">Clear this visit</button>
+    <a routerLink="/welcome" class="action-link">Back to start</a>
   </footer>
 </div>

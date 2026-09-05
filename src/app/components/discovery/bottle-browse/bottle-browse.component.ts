@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 
 import { loadCatalogBundle } from '../../../core-services/catalog/catalog-bundle';
 import { fuzzyMatchNames } from '../../../core-services/discovery/flavor-query';
-import { BottleRecord } from '../../../models/catalog-types';
+import { BottleRecord, FlavorWeights } from '../../../models/catalog-types';
 import { CabinetStore } from '../../../stores/cabinet-store';
 
 @Component({
@@ -35,6 +35,18 @@ export class BottleBrowseComponent {
 
   displayName(bottle: BottleRecord): string {
     return bottle.names[0] ?? bottle.id;
+  }
+
+  topFlavorLabels(bottle: BottleRecord): string[] {
+    return this.topLabels(bottle.flavor);
+  }
+
+  private topLabels(weights: FlavorWeights): string[] {
+    return Object.entries(weights)
+      .filter(([, weight]) => typeof weight === 'number' && weight > 0)
+      .sort(([, a], [, b]) => (b ?? 0) - (a ?? 0))
+      .slice(0, 3)
+      .map(([id]) => id);
   }
 
   setQuery(value: string): void {

@@ -1,179 +1,143 @@
-<div
-  class="min-h-full max-w-discover mx-auto px-[clamp(0.25rem,1vw,0.5rem)] py-[clamp(1.25rem,3vw,2rem)] text-ink font-body"
->
+<div class="page-flow">
   <header>
-    <p class="mb-2 text-xs font-semibold tracking-[0.12em] uppercase text-accent-deep">Flavor entry</p>
-    <h1 class="mb-3 text-[clamp(1.55rem,3.5vw,2.15rem)] font-bold leading-[1.15] tracking-tight">
+    <p class="eyebrow">Flavor entry</p>
+    <h1 class="page-title mt-3">
       @if (queryText()) {
-        “{{ queryText() }}”
-        <span class="block mt-1 font-script text-[clamp(1.25rem,3vw,1.65rem)] font-normal text-accent-deep tracking-normal">
-          drinks first, then bottles
-        </span>
+        {{ queryText() }}
+        <span class="accent-line">drinks first, then bottles</span>
       } @else {
         Taste a flavor
-        <span class="block mt-1 font-script text-[clamp(1.25rem,3vw,1.65rem)] font-normal text-accent-deep tracking-normal">
-          then choose a path
-        </span>
+        <span class="accent-line">then choose a path</span>
       }
     </h1>
-    <p class="mb-6 max-w-[52ch] text-[1.02rem] leading-relaxed text-ink-soft">
-      Likely picks lead; possible stays behind show-more. Unlock stays on bottle detail — this list is flavor only.
+    <p class="lede mt-5">
+      Flavor is a shared language, not a mixed pile. We start with the drinks that fit, then show bottles carrying the same signal.
     </p>
   </header>
 
   @if (!queryText()) {
-    <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
-      Add a flavor in the URL or from the welcome page (for example
-      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/flavor" [queryParams]="{ q: 'bitter' }">bitter</a>
+    <p class="empty-state">
+      Add a flavor from the welcome page, or try
+      <a class="action-link" routerLink="/discover/flavor" [queryParams]="{ q: 'bitter' }">bitter</a>
       or
-      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/flavor" [queryParams]="{ q: 'bright and dry' }">bright and dry</a>).
+      <a class="action-link" routerLink="/discover/flavor" [queryParams]="{ q: 'bright and dry' }">bright and dry</a>.
     </p>
   } @else if (!queryVector()) {
-    <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
-      We don’t recognize “{{ queryText() }}” in the taste vocabulary yet. Try words like bitter, citrus, herbal, smoky, or dry —
+    <p class="empty-state">
+      We don't recognize "{{ queryText() }}" in the taste vocabulary yet. Try bitter, citrus, herbal, smoky, or dry,
       or browse
-      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/drinks">by drink</a>
-      /
-      <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/bottles">by bottle</a>.
+      <a class="action-link" routerLink="/discover/drinks">by drink</a>
+      or
+      <a class="action-link" routerLink="/discover/bottles">by bottle</a>.
     </p>
   } @else {
-    <section class="p-5 mb-6 border border-border rounded-[0.85rem] bg-surface-raised" aria-labelledby="flavor-query-heading">
-      <h2 id="flavor-query-heading" class="m-0 mb-3 text-[1.05rem] font-bold">Query profile</h2>
-      <clsc-flavor-profile [weights]="queryVector()!" heading="Canonical weights" />
+    <section class="quiet-panel" aria-labelledby="flavor-query-heading">
+      <h2 id="flavor-query-heading" class="section-kicker">Taste signal</h2>
+      <clsc-flavor-profile [weights]="queryVector()!" heading="Matched flavor weights" />
     </section>
 
     @if (results(); as bag) {
-      <section class="mb-8" aria-labelledby="flavor-drinks-heading">
-        <h2 id="flavor-drinks-heading" class="mb-1.5 text-lg font-bold">Drinks</h2>
-        <p class="mb-4 text-sm text-ink-soft">Labeled drinks group — shown first.</p>
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <section class="surface-rule" aria-labelledby="flavor-drinks-heading">
+          <h2 id="flavor-drinks-heading" class="page-title text-[clamp(1.8rem,3vw,2.75rem)]">Drinks</h2>
+          <p class="mt-3 max-w-[56ch] text-sm leading-6 text-ink-soft">Likely drinks lead because this is usually the fastest path to a glass.</p>
 
-        <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Likely</h3>
-        @if (bag.likelyDrinks.length) {
-          <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
-            @for (drink of bag.likelyDrinks; track drink.id) {
-              <a
-                role="listitem"
-                class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
-                [routerLink]="['/discover/drinks', drink.id]"
-              >
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <p class="m-0 text-[1.05rem] font-bold">{{ drink.primaryName }}</p>
-                  <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-likely-bg text-accent-deep">
-                    Likely
-                  </span>
-                </div>
-                @if (drink.reasons.length) {
-                  <ul class="mt-1.5 mb-0 p-0 list-none text-[0.8125rem] text-ink-soft [&>li]:before:content-['·_'] [&>li]:before:font-bold">
-                    @for (reason of drink.reasons; track reason) {
-                      <li>{{ reason }}</li>
-                    }
-                  </ul>
-                }
-              </a>
-            }
-          </div>
-        } @else {
-          <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">
-            No likely drinks for this flavor. Nothing invented — try another phrase.
-          </p>
-        }
+          <h3 class="section-kicker mt-7">Likely</h3>
+          @if (bag.likelyDrinks.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (drink of bag.likelyDrinks; track drink.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ drink.primaryName }}</p>
+                    <span class="status-pill bg-likely-bg text-accent-deep">Likely</span>
+                  </div>
+                  @if (drink.reasons.length) {
+                    <ul class="m-0 list-none p-0 text-sm leading-6 text-ink-soft">
+                      @for (reason of drink.reasons; track reason) {
+                        <li>{{ reason }}</li>
+                      }
+                    </ul>
+                  }
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No likely drinks for this flavor. Nothing invented; try another phrase.</p>
+          }
 
-        @if (bag.possibleDrinks.length) {
-          <div class="flex flex-wrap gap-3 items-center mt-5">
-            <button type="button" mat-button (click)="togglePossibleDrinks()">
+          @if (bag.possibleDrinks.length) {
+            <button type="button" class="secondary-button mt-5" (click)="togglePossibleDrinks()">
               {{ showPossibleDrinks() ? 'Hide' : 'Show' }} possible drinks ({{ bag.possibleDrinks.length }})
             </button>
-          </div>
-          @if (showPossibleDrinks()) {
-            <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Possible</h3>
-            <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
-              @for (drink of bag.possibleDrinks; track drink.id) {
-                <a
-                  role="listitem"
-                  class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
-                  [routerLink]="['/discover/drinks', drink.id]"
-                >
-                  <div class="flex flex-wrap items-center justify-between gap-2">
-                    <p class="m-0 text-[1.05rem] font-bold">{{ drink.primaryName }}</p>
-                    <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-possible-bg text-ink-soft">
-                      Possible
-                    </span>
+            @if (showPossibleDrinks()) {
+              <h3 class="section-kicker mt-7">Possible</h3>
+              <div class="menu-list mt-4" role="list">
+                @for (drink of bag.possibleDrinks; track drink.id) {
+                  <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                    <div class="menu-row__top">
+                      <p class="menu-row__title">{{ drink.primaryName }}</p>
+                      <span class="status-pill bg-possible-bg text-ink-soft">Possible</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            }
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="flavor-bottles-heading">
+          <h2 id="flavor-bottles-heading" class="page-title text-[clamp(1.8rem,3vw,2.75rem)]">Bottles</h2>
+          <p class="mt-3 max-w-[42ch] text-sm leading-6 text-ink-soft">Bottle matches are ways into the cabinet. Unlock happens on each bottle page.</p>
+
+          <h3 class="section-kicker mt-7">Likely</h3>
+          @if (bag.likelyBottles.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (bottle of bag.likelyBottles; track bottle.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/bottles', bottle.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ bottle.primaryName }}</p>
+                    <span class="status-pill bg-likely-bg text-accent-deep">Likely</span>
                   </div>
+                  @if (bottle.reasons.length) {
+                    <ul class="m-0 list-none p-0 text-sm leading-6 text-ink-soft">
+                      @for (reason of bottle.reasons; track reason) {
+                        <li>{{ reason }}</li>
+                      }
+                    </ul>
+                  }
                 </a>
               }
             </div>
+          } @else {
+            <p class="empty-state mt-4">No likely bottles for this flavor.</p>
           }
-        }
-      </section>
 
-      <section class="mb-8" aria-labelledby="flavor-bottles-heading">
-        <h2 id="flavor-bottles-heading" class="mb-1.5 text-lg font-bold">Bottles</h2>
-        <p class="mb-4 text-sm text-ink-soft">Labeled bottles group — after drinks.</p>
-
-        <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Likely</h3>
-        @if (bag.likelyBottles.length) {
-          <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
-            @for (bottle of bag.likelyBottles; track bottle.id) {
-              <a
-                role="listitem"
-                class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
-                [routerLink]="['/discover/bottles', bottle.id]"
-              >
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <p class="m-0 text-[1.05rem] font-bold">{{ bottle.primaryName }}</p>
-                  <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-likely-bg text-accent-deep">
-                    Likely
-                  </span>
-                </div>
-                @if (bottle.reasons.length) {
-                  <ul class="mt-1.5 mb-0 p-0 list-none text-[0.8125rem] text-ink-soft [&>li]:before:content-['·_'] [&>li]:before:font-bold">
-                    @for (reason of bottle.reasons; track reason) {
-                      <li>{{ reason }}</li>
-                    }
-                  </ul>
-                }
-              </a>
-            }
-          </div>
-        } @else {
-          <p class="m-0 p-5 px-4 border border-dashed border-border rounded-xl text-ink-soft leading-normal">No likely bottles for this flavor.</p>
-        }
-
-        @if (bag.possibleBottles.length) {
-          <div class="flex flex-wrap gap-3 items-center mt-5">
-            <button type="button" mat-button (click)="togglePossibleBottles()">
+          @if (bag.possibleBottles.length) {
+            <button type="button" class="secondary-button mt-5" (click)="togglePossibleBottles()">
               {{ showPossibleBottles() ? 'Hide' : 'Show' }} possible bottles ({{ bag.possibleBottles.length }})
             </button>
-          </div>
-          @if (showPossibleBottles()) {
-            <h3 class="mt-4 mb-2 text-[0.8125rem] font-semibold tracking-wide uppercase text-ink-soft">Possible</h3>
-            <div class="flex flex-col gap-3 list-none m-0 p-0" role="list">
-              @for (bottle of bag.possibleBottles; track bottle.id) {
-                <a
-                  role="listitem"
-                  class="grid gap-y-1.5 gap-x-4 p-4 px-[1.1rem] border border-border rounded-xl bg-surface-raised no-underline text-inherit motion-safe:transition motion-safe:duration-150 hover:border-accent/35 hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 motion-safe:animate-discover-rise"
-                  [routerLink]="['/discover/bottles', bottle.id]"
-                >
-                  <div class="flex flex-wrap items-center justify-between gap-2">
-                    <p class="m-0 text-[1.05rem] font-bold">{{ bottle.primaryName }}</p>
-                    <span class="inline-flex items-center gap-1 py-0.5 px-2 rounded-full text-[0.7rem] font-bold tracking-wide uppercase bg-possible-bg text-ink-soft">
-                      Possible
-                    </span>
-                  </div>
-                </a>
-              }
-            </div>
+            @if (showPossibleBottles()) {
+              <h3 class="section-kicker mt-7">Possible</h3>
+              <div class="menu-list mt-4" role="list">
+                @for (bottle of bag.possibleBottles; track bottle.id) {
+                  <a role="listitem" class="menu-row" [routerLink]="['/discover/bottles', bottle.id]">
+                    <div class="menu-row__top">
+                      <p class="menu-row__title">{{ bottle.primaryName }}</p>
+                      <span class="status-pill bg-possible-bg text-ink-soft">Possible</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            }
           }
-        }
-      </section>
+        </section>
+      </div>
     }
   }
 
-  <p>
-    <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/drinks">By the drink</a>
-    ·
-    <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/discover/bottles">By the bottle</a>
-    ·
-    <a class="font-semibold text-accent-deep no-underline underline-offset-[3px] hover:underline hover:text-accent" routerLink="/welcome">Welcome</a>
+  <p class="m-0 text-sm leading-6 text-ink-soft">
+    <a class="action-link" routerLink="/discover/drinks">By the drink</a>
+    <a class="action-link" routerLink="/discover/bottles">By the bottle</a>
+    <a class="action-link" routerLink="/welcome">Start over</a>
   </p>
 </div>

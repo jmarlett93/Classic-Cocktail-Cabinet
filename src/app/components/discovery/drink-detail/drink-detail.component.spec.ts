@@ -35,8 +35,8 @@ describe('DrinkDetailComponent', () => {
   it('can reveal from-bottles vs prep split', async () => {
     const user = userEvent.setup();
     await setup();
-    await user.click(screen.getByRole('button', { name: /Show from bottles/i }));
-    expect(screen.getByText(/From the bottles/i)).toBeInTheDocument();
-    expect(screen.getByText(/From prep/i)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Show what comes from bottles/i }));
+    expect(screen.getByRole('heading', { name: /From bottles/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /From prep and garnish/i })).toBeInTheDocument();
   });
 });

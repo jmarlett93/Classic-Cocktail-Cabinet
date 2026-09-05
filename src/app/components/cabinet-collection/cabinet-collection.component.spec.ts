@@ -11,8 +11,8 @@ describe('CabinetCollectionComponent', () => {
     });
     fixture.debugElement.injector.get(CabinetStore).resetSession();
 
-    expect(screen.getByRole('heading', { name: /What bottles do you have on hand/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Catalog bottles/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /What is on your shelf/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Shelf bottles/i })).toBeInTheDocument();
     expect(fixture.componentInstance.bottles().length).toBeGreaterThan(0);
     expect(fixture.componentInstance.bottles().every((b) => b.id.startsWith('bottle-'))).toBe(true);
   });

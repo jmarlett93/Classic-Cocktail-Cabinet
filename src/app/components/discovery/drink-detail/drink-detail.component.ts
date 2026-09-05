@@ -6,7 +6,6 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 
@@ -18,7 +17,7 @@ import { FlavorProfileComponent } from '../flavor-profile/flavor-profile.compone
 
 @Component({
   selector: 'clsc-drink-detail',
-  imports: [RouterLink, MatButtonModule, FlavorProfileComponent],
+  imports: [RouterLink, FlavorProfileComponent],
   templateUrl: './drink-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

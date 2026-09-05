@@ -1,55 +1,55 @@
 <div class="min-h-screen flex flex-col bg-surface text-ink">
   <header
-    class="flex flex-wrap items-end justify-between gap-4 gap-x-8 px-[clamp(1.25rem,4vw,2.5rem)] py-[clamp(1rem,3vw,1.5rem)] bg-shell-header text-shell-ink"
+    class="sticky top-0 z-10 border-b border-border bg-shell-header px-[max(1rem,env(safe-area-inset-left))] py-3 text-shell-ink backdrop-blur"
   >
-    <div class="flex flex-col gap-1">
-      <h1 class="m-0 font-script text-[clamp(1.35rem,3.5vw,1.85rem)] font-normal leading-tight tracking-wide">{{ title }}</h1>
-      <p class="m-0 text-xs font-medium tracking-[0.08em] uppercase opacity-80 font-body">By the drink · by the bottle</p>
+    <div class="mx-auto flex max-w-shell flex-wrap items-center justify-between gap-3">
+      <a routerLink="/welcome" class="group flex items-baseline gap-3 text-inherit no-underline">
+        <span class="font-display text-[1.45rem] leading-none tracking-[-0.04em]">{{ title }}</span>
+        <span class="hidden text-[0.68rem] font-black uppercase tracking-[0.16em] text-shell-ink-muted sm:inline">
+          Drink · bottle · flavor
+        </span>
+      </a>
+      <nav class="flex flex-wrap gap-1.5" aria-label="Main">
+        <a
+          routerLink="/welcome"
+          routerLinkActive="!bg-nav-active-bg !border-nav-active-border !text-ink"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="inline-flex min-h-10 items-center rounded-full border border-transparent px-3 text-sm font-bold text-shell-ink-muted no-underline transition hover:bg-nav-hover hover:text-ink motion-reduce:transition-none"
+        >
+          Start
+        </a>
+        <a
+          routerLink="/discover/drinks"
+          routerLinkActive="!bg-nav-active-bg !border-nav-active-border !text-ink"
+          class="inline-flex min-h-10 items-center rounded-full border border-transparent px-3 text-sm font-bold text-shell-ink-muted no-underline transition hover:bg-nav-hover hover:text-ink motion-reduce:transition-none"
+        >
+          Drinks
+        </a>
+        <a
+          routerLink="/discover/bottles"
+          routerLinkActive="!bg-nav-active-bg !border-nav-active-border !text-ink"
+          class="inline-flex min-h-10 items-center rounded-full border border-transparent px-3 text-sm font-bold text-shell-ink-muted no-underline transition hover:bg-nav-hover hover:text-ink motion-reduce:transition-none"
+        >
+          Bottles
+        </a>
+        <a
+          routerLink="/cabinet"
+          routerLinkActive="!bg-nav-active-bg !border-nav-active-border !text-ink"
+          class="inline-flex min-h-10 items-center rounded-full border border-transparent px-3 text-sm font-bold text-shell-ink-muted no-underline transition hover:bg-nav-hover hover:text-ink motion-reduce:transition-none"
+        >
+          Cabinet
+        </a>
+      </nav>
     </div>
-    <nav class="flex flex-wrap gap-x-4 gap-y-2" aria-label="Main">
-      <a
-        routerLink="/welcome"
-        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
-      >
-        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">home</mat-icon>
-        <span>Start</span>
-      </a>
-      <a
-        routerLink="/discover/drinks"
-        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
-        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
-      >
-        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">local_bar</mat-icon>
-        <span>Drinks</span>
-      </a>
-      <a
-        routerLink="/discover/bottles"
-        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
-        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
-      >
-        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">liquor</mat-icon>
-        <span>Bottles</span>
-      </a>
-      <a
-        routerLink="/cabinet"
-        routerLinkActive="!bg-nav-active-bg !border-nav-active-border"
-        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-sm font-semibold text-shell-ink-muted no-underline border border-transparent motion-safe:transition hover:bg-nav-hover"
-      >
-        <mat-icon aria-hidden="true" class="!text-base !w-[1.125rem] !h-[1.125rem]">inventory_2</mat-icon>
-        <span>Cabinet</span>
-      </a>
-    </nav>
   </header>
 
-  <main class="flex-1 w-full max-w-shell mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,3vw,2rem)]">
+  <main class="flex-1 w-full">
     <router-outlet />
   </main>
 
-  <footer class="px-[clamp(1.25rem,4vw,2.5rem)] py-4 bg-shell-footer border-t border-border">
-    <p class="m-0 text-center text-[0.8125rem] text-shell-footer-text font-body">
-      © {{ currentYear }} Classic Cocktail Cabinet — drinks, bottles, and flavor from our catalog.
+  <footer class="border-t border-border bg-shell-footer px-[clamp(1.25rem,4vw,2.5rem)] py-5">
+    <p class="m-0 text-center text-[0.8125rem] leading-6 text-shell-footer-text">
+      © {{ currentYear }} Classic Cocktail Cabinet. Built around drinks, bottles, and a shared flavor language.
     </p>
   </footer>
 </div>

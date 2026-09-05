@@ -9,10 +9,10 @@ describe('AppComponent', () => {
       providers: [provideRouter([])],
     });
 
-    expect(screen.getByRole('heading', { name: /Classic Cocktail Cabinet/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Classic Cocktail Cabinet/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Drinks/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Bottles/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Cabinet/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^Cabinet$/i })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /Taste chat/i })).not.toBeInTheDocument();
   });
 });

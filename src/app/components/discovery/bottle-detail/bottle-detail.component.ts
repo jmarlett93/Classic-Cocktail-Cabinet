@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,7 +7,6 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 
@@ -35,7 +33,7 @@ interface DrinkListItem {
 
 @Component({
   selector: 'clsc-bottle-detail',
-  imports: [RouterLink, MatButtonModule, FlavorProfileComponent, DecimalPipe],
+  imports: [RouterLink, FlavorProfileComponent],
   templateUrl: './bottle-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
