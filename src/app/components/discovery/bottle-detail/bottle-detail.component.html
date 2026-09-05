@@ -1,0 +1,184 @@
+<div class="page-flow">
+  @if (bottle(); as bottle) {
+    <header>
+      <p class="eyebrow text-accent-warm">By the bottle</p>
+      <h1 class="page-title mt-3">{{ displayName() }}</h1>
+      <p class="lede mt-5">{{ bottle.description }}</p>
+      <p class="meta-line mt-5">
+        <span>{{ bottle.kind }}</span>
+        <span>{{ bottle.spiritFamily }}</span>
+        <span>{{ bottle.typicalRole }}</span>
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button type="button" class="primary-button" (click)="toggleOwned()">
+          {{ cabinet.isOwned(bottle.id) ? 'Remove from cabinet' : 'I have this' }}
+        </button>
+        <a class="action-link" routerLink="/cabinet">Edit your shelf</a>
+      </div>
+    </header>
+
+    <div class="detail-grid">
+      <div class="detail-main">
+        <section class="quiet-panel border-unlock-border bg-unlock-bg" aria-labelledby="bottle-unlock-heading">
+          <p class="section-kicker text-unlock-badge-text">Best next bottle</p>
+          <h2 id="bottle-unlock-heading" class="m-0 mt-3 font-display text-[2.65rem] leading-none tracking-[-0.045em]">
+            What to buy next
+          </h2>
+          <p class="m-0 mt-4 text-sm leading-6 text-ink-soft">
+            This is cabinet math, kept separate from taste neighbors. It counts drinks that become complete if you add one more bottle.
+          </p>
+          @if (unlockCandidates().length) {
+            <div class="menu-list mt-5" role="list">
+              @for (candidate of unlockCandidates(); track candidate.bottleId) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/bottles', candidate.bottleId]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ candidate.name }}</p>
+                    <span class="status-pill bg-unlock-badge text-unlock-badge-text">
+                      +{{ candidate.unlockCount }} drink{{ candidate.unlockCount === 1 ? '' : 's' }}
+                    </span>
+                  </div>
+                  <p class="menu-row__copy">Adds {{ candidate.unlockedNames.join(', ') }}.</p>
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-5">
+              No single bottle improves the number of drinks from here. Add a few bottles to your shelf, or browse nearby flavors.
+            </p>
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="bottle-complete-heading">
+          <h2 id="bottle-complete-heading" class="section-kicker">Drinks you can make</h2>
+          <p class="mt-3 max-w-[58ch] text-sm leading-6 text-ink-soft">
+            Uses bottles on your shelf plus this bottle as the focus.
+          </p>
+          @if (completeness().complete.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (drink of completeness().complete; track drink.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ drink.name }}</p>
+                    <span class="status-pill bg-complete-bg text-complete">You can make this</span>
+                  </div>
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">
+              This bottle is ready, but your shelf does not complete a catalog drink yet. The buy-next list shows the quickest openings.
+            </p>
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="bottle-away-heading">
+          <h2 id="bottle-away-heading" class="section-kicker">One bottle away</h2>
+          @if (completeness().oneAway.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (drink of completeness().oneAway; track drink.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ drink.name }}</p>
+                    <span class="status-pill bg-away-bg text-away-text">Missing one</span>
+                  </div>
+                  <p class="menu-row__copy">Add {{ drink.missingNames.join(', ') }}.</p>
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">Nothing is exactly one bottle away from complete.</p>
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="bottle-likely-drinks-heading">
+          <h2 id="bottle-likely-drinks-heading" class="section-kicker">Likely drinks by flavor</h2>
+          <p class="mt-3 max-w-[58ch] text-sm leading-6 text-ink-soft">
+            These include this bottle and sit close to its flavor. They are not the unlock ranking.
+          </p>
+          @if (likelyDrinks().length) {
+            <div class="menu-list mt-4" role="list">
+              @for (drink of likelyDrinks(); track drink.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ drink.primaryName }}</p>
+                    <span class="status-pill bg-likely-bg text-accent-deep">Likely</span>
+                  </div>
+                  @if (drink.reasons.length) {
+                    <ul class="m-0 list-none p-0 text-sm leading-6 text-ink-soft">
+                      @for (reason of drink.reasons; track reason) {
+                        <li>{{ reason }}</li>
+                      }
+                    </ul>
+                  }
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No strong flavor-fit drinks for this bottle yet.</p>
+          }
+        </section>
+      </div>
+
+      <aside class="detail-aside" aria-label="Bottle context">
+        <section class="quiet-panel" aria-labelledby="bottle-flavor-heading">
+          <h2 id="bottle-flavor-heading" class="section-kicker">Bottle flavor</h2>
+          <clsc-flavor-profile [weights]="bottle.flavor" heading="Liquid in the bottle" />
+        </section>
+
+        <section class="quiet-panel" aria-labelledby="bottle-neighbors-heading">
+          <h2 id="bottle-neighbors-heading" class="section-kicker">Nearby bottles (flavor)</h2>
+          <p class="mt-3 text-sm leading-6 text-ink-soft">Taste neighbors, separate from unlock.</p>
+          @if (neighbors().likely.length) {
+            <div class="mt-4 flex flex-col gap-3" role="list">
+              @for (near of neighbors().likely; track near.id) {
+                <a
+                  role="listitem"
+                  class="rounded-2xl bg-surface-alt px-4 py-3 text-sm font-bold text-ink no-underline transition hover:bg-surface-wash motion-reduce:transition-none"
+                  [routerLink]="['/discover/bottles', near.id]"
+                >
+                  {{ near.primaryName }}
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No likely flavor neighbors.</p>
+          }
+
+          @if (neighbors().possible.length) {
+            <button type="button" class="secondary-button mt-4" (click)="togglePossibleNeighbors()">
+              {{ showPossibleNeighbors() ? 'Hide' : 'Show' }} possible neighbors
+            </button>
+            @if (showPossibleNeighbors()) {
+              <div class="mt-4 flex flex-col gap-3" role="list">
+                @for (near of neighbors().possible; track near.id) {
+                  <a
+                    role="listitem"
+                    class="rounded-2xl bg-surface-raised px-4 py-3 text-sm font-bold text-ink no-underline transition hover:bg-surface-alt motion-reduce:transition-none"
+                    [routerLink]="['/discover/bottles', near.id]"
+                  >
+                    {{ near.primaryName }}
+                  </a>
+                }
+              </div>
+            }
+          }
+        </section>
+      </aside>
+    </div>
+
+    <p class="m-0 text-sm leading-6 text-ink-soft">
+      <a class="action-link" routerLink="/discover/bottles">All bottles</a>
+      <a class="action-link" routerLink="/discover/drinks">By the drink</a>
+      <a class="action-link" routerLink="/cabinet">Your cabinet</a>
+    </p>
+  } @else {
+    <header>
+      <p class="eyebrow text-accent-warm">By the bottle</p>
+      <h1 class="page-title mt-3">Bottle not found</h1>
+      <p class="empty-state mt-5">
+        That bottle is not in the cabinet catalog yet.
+        <a class="action-link" routerLink="/discover/bottles">Browse bottles</a>
+      </p>
+    </header>
+  }
+</div>

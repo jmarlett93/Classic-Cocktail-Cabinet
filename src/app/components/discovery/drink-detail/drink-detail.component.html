@@ -1,0 +1,130 @@
+<div class="page-flow">
+  @if (drink(); as drink) {
+    <header>
+      <p class="eyebrow">By the drink</p>
+      <h1 class="page-title mt-3">{{ displayName() }}</h1>
+      <p class="lede mt-5">{{ drink.description }}</p>
+      <p class="meta-line mt-5">
+        <span>{{ drink.method }}</span>
+        <span>{{ drink.glass }}</span>
+        <span>{{ drink.drinkFamily }}</span>
+      </p>
+    </header>
+
+    <div class="detail-grid">
+      <div class="detail-main">
+        <section class="quiet-panel" aria-labelledby="drink-flavor-heading">
+          <p class="section-kicker">Finished profile</p>
+          <h2 id="drink-flavor-heading" class="m-0 mt-3 font-display text-[2.4rem] leading-none tracking-[-0.045em]">
+            How it tastes
+          </h2>
+          @if (composedViews(); as views) {
+            <clsc-flavor-profile [weights]="views.composed" heading="Finished drink" />
+            <button type="button" class="secondary-button mt-5" (click)="toggleSplit()">
+              {{ showSplit() ? 'Hide' : 'Show' }} what comes from bottles
+            </button>
+            @if (showSplit()) {
+              <div class="mt-5 grid gap-5 sm:grid-cols-2">
+                <clsc-flavor-profile [weights]="views.inherited" heading="From bottles" />
+                <clsc-flavor-profile [weights]="drink.flavor.authored" heading="From prep and garnish" />
+              </div>
+            }
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="drink-bottles-heading">
+          <h2 id="drink-bottles-heading" class="section-kicker">Bottles you need</h2>
+          <ul class="menu-list mt-4" role="list">
+            @for (row of bottleRows(); track row.id) {
+              <li class="menu-row">
+                <div class="menu-row__top">
+                  <a class="menu-row__title no-underline hover:text-accent" [routerLink]="['/discover/bottles', row.id]" (click)="focusBottle(row.id)">
+                    {{ row.name }}
+                  </a>
+                  <span
+                    class="status-pill"
+                    [class.bg-complete-bg]="row.owned"
+                    [class.text-complete]="row.owned"
+                    [class.bg-possible-bg]="!row.owned"
+                    [class.text-ink-soft]="!row.owned"
+                  >
+                    {{ row.owned ? 'On your shelf' : 'Need this' }}
+                  </span>
+                </div>
+                <p class="menu-row__copy">{{ row.amountMl }} ml, {{ row.role }}</p>
+                <div class="mt-3">
+                  <clsc-flavor-profile [weights]="row.flavor" heading="Bottle flavor" />
+                </div>
+                <div class="mt-4 flex flex-wrap gap-3">
+                  <button type="button" class="secondary-button" (click)="toggleOwned(row.id)">
+                    {{ row.owned ? 'Remove from shelf' : 'I have this' }}
+                  </button>
+                  <a class="action-link" [routerLink]="['/discover/bottles', row.id]" (click)="focusBottle(row.id)">
+                    Open bottle and unlock
+                  </a>
+                </div>
+              </li>
+            }
+          </ul>
+          @if (missingBottles().length) {
+            <p class="empty-state mt-5">
+              You are missing {{ missingBottles().length }} shelf bottle{{ missingBottles().length === 1 ? '' : 's' }} for this drink.
+            </p>
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="drink-instructions-heading">
+          <h2 id="drink-instructions-heading" class="section-kicker">How to make it</h2>
+          <p class="m-0 mt-4 max-w-[62ch] whitespace-pre-wrap font-display text-[1.35rem] leading-8 tracking-[-0.02em] text-ink">
+            {{ drink.instructions }}
+          </p>
+          @if (stapleRows().length) {
+            <p class="mt-5 text-sm font-bold text-ink">Kitchen staples we assume you have</p>
+            <ul class="m-0 flex list-none flex-wrap gap-2 p-0 text-sm text-ink-soft" role="list">
+              @for (staple of stapleRows(); track staple.id) {
+                <li class="rounded-full bg-surface-alt px-3 py-1.5">{{ staple.name }} · {{ staple.amountMl }} ml</li>
+              }
+            </ul>
+          }
+        </section>
+      </div>
+
+      <aside class="detail-aside" aria-label="Nearby drinks">
+        <section class="quiet-panel" aria-labelledby="drink-nearby-heading">
+          <h2 id="drink-nearby-heading" class="section-kicker">Nearby drinks</h2>
+          <p class="mt-3 text-sm leading-6 text-ink-soft">Similar finished flavor, not cabinet math.</p>
+          @if (nearbyDrinks().length) {
+            <div class="mt-4 flex flex-col gap-3" role="list">
+              @for (near of nearbyDrinks(); track near.id) {
+                <a
+                  role="listitem"
+                  class="rounded-2xl bg-surface-alt px-4 py-3 text-sm font-bold text-ink no-underline transition hover:bg-surface-wash motion-reduce:transition-none"
+                  [routerLink]="['/discover/drinks', near.id]"
+                >
+                  {{ near.primaryName }}
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No nearby drinks with a strong flavor overlap.</p>
+          }
+        </section>
+      </aside>
+    </div>
+
+    <p class="m-0 text-sm leading-6 text-ink-soft">
+      <a class="action-link" routerLink="/discover/drinks">All drinks</a>
+      <a class="action-link" routerLink="/discover/bottles">By the bottle</a>
+      <a class="action-link" routerLink="/cabinet">Your cabinet</a>
+    </p>
+  } @else {
+    <header>
+      <p class="eyebrow">By the drink</p>
+      <h1 class="page-title mt-3">Drink not found</h1>
+      <p class="empty-state mt-5">
+        That drink is not in the catalog.
+        <a class="action-link" routerLink="/discover/drinks">Browse drinks</a>
+      </p>
+    </header>
+  }
+</div>

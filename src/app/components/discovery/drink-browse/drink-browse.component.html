@@ -1,0 +1,68 @@
+<div class="page-flow page-flow--narrow">
+  <header>
+    <p class="eyebrow">By the drink</p>
+    <h1 class="page-title mt-3">
+      Find a drink
+      <span class="accent-line">then see the bottles behind it</span>
+    </h1>
+    <p class="lede mt-5">
+      Browse the classics like a bar menu. Open one for its finished flavor, shelf bottles, staples, and nearby drinks.
+    </p>
+  </header>
+
+  <div class="quiet-panel" role="search">
+    <label class="sr-only" for="drink-search">Search drinks</label>
+    <input
+      id="drink-search"
+      class="min-h-12 w-full rounded-full border border-border bg-[oklch(0.995_0.006_220)] px-5 text-base text-ink outline-none transition placeholder:text-ink-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_4px_oklch(0.66_0.09_190_/_0.24)] motion-reduce:transition-none"
+      type="search"
+      [value]="query()"
+      (input)="setQuery(($any($event.target)).value)"
+      placeholder="Search drinks — Negroni, Martini…"
+      autocomplete="off"
+    />
+  </div>
+
+  <section class="surface-rule" aria-labelledby="drink-results-heading">
+    <h2 id="drink-results-heading" class="section-kicker">
+      {{ drinks().length }} drink{{ drinks().length === 1 ? '' : 's' }}
+    </h2>
+    @if (drinks().length) {
+      <div class="menu-list mt-4" role="list">
+        @for (drink of drinks(); track drink.id) {
+          <a
+            role="listitem"
+            class="menu-row"
+            [routerLink]="['/discover/drinks', drink.id]"
+          >
+            <div class="menu-row__top">
+              <p class="menu-row__title">{{ displayName(drink) }}</p>
+              <span class="meta-line">
+                <span>{{ drink.method }}</span>
+                <span>{{ drink.glass }}</span>
+              </span>
+            </div>
+            <p class="menu-row__copy">{{ drink.description }}</p>
+            <p class="meta-line">
+              @for (label of topFlavorLabels(drink); track label) {
+                <span>{{ label }}</span>
+              }
+            </p>
+          </a>
+        }
+      </div>
+    } @else {
+      <p class="empty-state mt-4">
+        No drinks match that name yet. Try another spelling, or
+        <a class="action-link" routerLink="/discover/flavor">start from a flavor</a>.
+      </p>
+    }
+  </section>
+
+  <p class="m-0 text-sm leading-6 text-ink-soft">
+    Prefer bottles?
+    <a class="action-link" routerLink="/discover/bottles">Browse by the bottle</a>
+    or
+    <a class="action-link" routerLink="/cabinet">edit your cabinet</a>.
+  </p>
+</div>

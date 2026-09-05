@@ -201,9 +201,13 @@ erDiagram
 
 | System | Type | Responsibility | Upstream | Downstream |
 |--------|------|----------------|----------|--------------|
-| **Router** | Angular `Routes` | `/` → `welcome`, `/liquor-recommendations` → chat | URL | Components |
-| **LandingPageComponent** | Standalone component | PRD-focused copy; taste starters; navigates to chat with `?q=` | User | `Router` |
-| **LiquorChatbotComponent** | Standalone component | Chat layout, scroll; reads `q` query then clears URL | User | `LiquorChatbotStore`, `ActivatedRoute` |
+| **Router** | Angular `Routes` | `/welcome`, `/discover/*`, `/cabinet`; legacy `/liquor-recommendations` | URL | Components |
+| **LandingPageComponent** | Standalone component | Two-path entry + flavor → `/discover/flavor?q=` | User | `Router`, `CabinetStore` |
+| **DrinkBrowse / DrinkDetail** | Standalone components | By-the-drink browse + composed flavor / bottles / nearby | User | Catalog + discovery pure APIs, `CabinetStore` |
+| **BottleBrowse / BottleDetail** | Standalone components | By-the-bottle; completeness + unlock (owned ∪ focus) + flavor neighbors | User | Catalog + discovery pure APIs, `CabinetStore` |
+| **FlavorResultsComponent** | Standalone component | Flavor dual-entry: drinks then bottles, likely then possible | User | `resolveFlavorQuery`, rankers, `CabinetStore` |
+| **FlavorProfileComponent** | Shared presentational | Low/Medium/High flavor chips (taste-tinted, text intensity) | Parent views | — |
+| **LiquorChatbotComponent** | Standalone component | Legacy chat (not in primary nav) | User | `LiquorChatbotStore`, `ActivatedRoute` |
 | **LiquorChatbotStore** | `@ngrx/signals` store | Messages, loading; invokes taste + optional narration graph | Component | `TasteRecommendationService`, `TasteNarrationFacade` |
 | **UserPromptInfoStore** | `@ngrx/signals` store | Legacy prompt store | — | Optional removal |
 | **CabinetStore** | `@ngrx/signals` store | Visit-scoped owned bottles, focus, flavor terms/vector; synced to `sessionStorage` | User toggles | PR-04 discovery/detail consumers |

@@ -1,0 +1,143 @@
+<div class="page-flow">
+  <header>
+    <p class="eyebrow">Flavor entry</p>
+    <h1 class="page-title mt-3">
+      @if (queryText()) {
+        {{ queryText() }}
+        <span class="accent-line">drinks first, then bottles</span>
+      } @else {
+        Taste a flavor
+        <span class="accent-line">then choose a path</span>
+      }
+    </h1>
+    <p class="lede mt-5">
+      Flavor is a shared language, not a mixed pile. We start with the drinks that fit, then show bottles carrying the same signal.
+    </p>
+  </header>
+
+  @if (!queryText()) {
+    <p class="empty-state">
+      Add a flavor from the welcome page, or try
+      <a class="action-link" routerLink="/discover/flavor" [queryParams]="{ q: 'bitter' }">bitter</a>
+      or
+      <a class="action-link" routerLink="/discover/flavor" [queryParams]="{ q: 'bright and dry' }">bright and dry</a>.
+    </p>
+  } @else if (!queryVector()) {
+    <p class="empty-state">
+      We don't recognize "{{ queryText() }}" in the taste vocabulary yet. Try bitter, citrus, herbal, smoky, or dry,
+      or browse
+      <a class="action-link" routerLink="/discover/drinks">by drink</a>
+      or
+      <a class="action-link" routerLink="/discover/bottles">by bottle</a>.
+    </p>
+  } @else {
+    <section class="quiet-panel" aria-labelledby="flavor-query-heading">
+      <h2 id="flavor-query-heading" class="section-kicker">Taste signal</h2>
+      <clsc-flavor-profile [weights]="queryVector()!" heading="Matched flavor weights" />
+    </section>
+
+    @if (results(); as bag) {
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <section class="surface-rule" aria-labelledby="flavor-drinks-heading">
+          <h2 id="flavor-drinks-heading" class="page-title text-[clamp(1.8rem,3vw,2.75rem)]">Drinks</h2>
+          <p class="mt-3 max-w-[56ch] text-sm leading-6 text-ink-soft">Likely drinks lead because this is usually the fastest path to a glass.</p>
+
+          <h3 class="section-kicker mt-7">Likely</h3>
+          @if (bag.likelyDrinks.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (drink of bag.likelyDrinks; track drink.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ drink.primaryName }}</p>
+                    <span class="status-pill bg-likely-bg text-accent-deep">Likely</span>
+                  </div>
+                  @if (drink.reasons.length) {
+                    <ul class="m-0 list-none p-0 text-sm leading-6 text-ink-soft">
+                      @for (reason of drink.reasons; track reason) {
+                        <li>{{ reason }}</li>
+                      }
+                    </ul>
+                  }
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No likely drinks for this flavor. Nothing invented; try another phrase.</p>
+          }
+
+          @if (bag.possibleDrinks.length) {
+            <button type="button" class="secondary-button mt-5" (click)="togglePossibleDrinks()">
+              {{ showPossibleDrinks() ? 'Hide' : 'Show' }} possible drinks ({{ bag.possibleDrinks.length }})
+            </button>
+            @if (showPossibleDrinks()) {
+              <h3 class="section-kicker mt-7">Possible</h3>
+              <div class="menu-list mt-4" role="list">
+                @for (drink of bag.possibleDrinks; track drink.id) {
+                  <a role="listitem" class="menu-row" [routerLink]="['/discover/drinks', drink.id]">
+                    <div class="menu-row__top">
+                      <p class="menu-row__title">{{ drink.primaryName }}</p>
+                      <span class="status-pill bg-possible-bg text-ink-soft">Possible</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            }
+          }
+        </section>
+
+        <section class="surface-rule" aria-labelledby="flavor-bottles-heading">
+          <h2 id="flavor-bottles-heading" class="page-title text-[clamp(1.8rem,3vw,2.75rem)]">Bottles</h2>
+          <p class="mt-3 max-w-[42ch] text-sm leading-6 text-ink-soft">Bottle matches are ways into the cabinet. Unlock happens on each bottle page.</p>
+
+          <h3 class="section-kicker mt-7">Likely</h3>
+          @if (bag.likelyBottles.length) {
+            <div class="menu-list mt-4" role="list">
+              @for (bottle of bag.likelyBottles; track bottle.id) {
+                <a role="listitem" class="menu-row" [routerLink]="['/discover/bottles', bottle.id]">
+                  <div class="menu-row__top">
+                    <p class="menu-row__title">{{ bottle.primaryName }}</p>
+                    <span class="status-pill bg-likely-bg text-accent-deep">Likely</span>
+                  </div>
+                  @if (bottle.reasons.length) {
+                    <ul class="m-0 list-none p-0 text-sm leading-6 text-ink-soft">
+                      @for (reason of bottle.reasons; track reason) {
+                        <li>{{ reason }}</li>
+                      }
+                    </ul>
+                  }
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="empty-state mt-4">No likely bottles for this flavor.</p>
+          }
+
+          @if (bag.possibleBottles.length) {
+            <button type="button" class="secondary-button mt-5" (click)="togglePossibleBottles()">
+              {{ showPossibleBottles() ? 'Hide' : 'Show' }} possible bottles ({{ bag.possibleBottles.length }})
+            </button>
+            @if (showPossibleBottles()) {
+              <h3 class="section-kicker mt-7">Possible</h3>
+              <div class="menu-list mt-4" role="list">
+                @for (bottle of bag.possibleBottles; track bottle.id) {
+                  <a role="listitem" class="menu-row" [routerLink]="['/discover/bottles', bottle.id]">
+                    <div class="menu-row__top">
+                      <p class="menu-row__title">{{ bottle.primaryName }}</p>
+                      <span class="status-pill bg-possible-bg text-ink-soft">Possible</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            }
+          }
+        </section>
+      </div>
+    }
+  }
+
+  <p class="m-0 text-sm leading-6 text-ink-soft">
+    <a class="action-link" routerLink="/discover/drinks">By the drink</a>
+    <a class="action-link" routerLink="/discover/bottles">By the bottle</a>
+    <a class="action-link" routerLink="/welcome">Start over</a>
+  </p>
+</div>

@@ -1,0 +1,29 @@
+<section [attr.aria-label]="heading()" class="mt-5">
+  <h3 class="section-kicker">{{ heading() }}</h3>
+  @if (chips().length) {
+    <ul class="m-0 mt-3 grid list-none gap-2 p-0" role="list">
+      @for (chip of chips(); track chip.id) {
+        <li [class]="'rounded-2xl border px-3 py-2 text-ink ' + chipTintClass(chip.flavorClass)">
+          <span class="flex items-baseline justify-between gap-3">
+            <span class="text-sm font-bold">{{ chip.label }}</span>
+            <span class="text-[0.72rem] font-black uppercase tracking-[0.08em] text-ink-soft">{{ chip.level }}</span>
+          </span>
+          <span class="mt-2 block h-1.5 overflow-hidden rounded-full bg-[oklch(1_0_0_/_0.72)]" aria-hidden="true">
+            <span class="block h-full rounded-full bg-accent-deep" [style.width.%]="chip.weight * 100"></span>
+          </span>
+          @if (showWeight()) {
+            <span class="mt-1 block text-[0.7rem] text-ink-soft" aria-hidden="true">{{ chip.weight | number: '1.0-2' }}</span>
+          }
+          <span class="sr-only">
+            {{ chip.label }} intensity {{ chip.level }}
+            @if (showWeight()) {
+              , weight {{ chip.weight }}
+            }
+          </span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="m-0 mt-3 text-[0.9rem] leading-6 text-ink-soft">No flavor weights recorded.</p>
+  }
+</section>

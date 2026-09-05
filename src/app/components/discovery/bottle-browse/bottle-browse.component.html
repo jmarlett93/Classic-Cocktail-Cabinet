@@ -1,0 +1,72 @@
+<div class="page-flow page-flow--narrow">
+  <header>
+    <p class="eyebrow text-accent-warm">By the bottle</p>
+    <h1 class="page-title mt-3">
+      Start from a bottle
+      <span class="accent-line text-accent-warm">see what it opens</span>
+    </h1>
+    <p class="lede mt-5">
+      Choose a shelf bottle to see its flavor, the drinks it helps complete, and the next bottle with the biggest payoff.
+    </p>
+  </header>
+
+  <div class="quiet-panel" role="search">
+    <label class="sr-only" for="bottle-search">Search bottles</label>
+    <input
+      id="bottle-search"
+      class="min-h-12 w-full rounded-full border border-border bg-[oklch(0.995_0.006_220)] px-5 text-base text-ink outline-none transition placeholder:text-ink-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_4px_oklch(0.66_0.09_190_/_0.24)] motion-reduce:transition-none"
+      type="search"
+      [value]="query()"
+      (input)="setQuery(($any($event.target)).value)"
+      placeholder="Search bottles — Campari, gin…"
+      autocomplete="off"
+    />
+  </div>
+
+  <section class="surface-rule" aria-labelledby="bottle-results-heading">
+    <h2 id="bottle-results-heading" class="section-kicker">
+      {{ bottles().length }} bottle{{ bottles().length === 1 ? '' : 's' }}
+    </h2>
+    @if (bottles().length) {
+      <div class="menu-list mt-4" role="list">
+        @for (bottle of bottles(); track bottle.id) {
+          <a
+            role="listitem"
+            class="menu-row"
+            [routerLink]="['/discover/bottles', bottle.id]"
+            (click)="setFocus(bottle.id)"
+          >
+            <div class="menu-row__top">
+              <p class="menu-row__title">{{ displayName(bottle) }}</p>
+              @if (cabinet.isOwned(bottle.id)) {
+                <span class="status-pill bg-complete-bg text-complete">
+                  In cabinet
+                </span>
+              }
+            </div>
+            <p class="menu-row__copy">{{ bottle.description }}</p>
+            <p class="meta-line">
+              <span>{{ bottle.spiritFamily }}</span>
+              <span>{{ bottle.typicalRole }}</span>
+              @for (label of topFlavorLabels(bottle); track label) {
+                <span>{{ label }}</span>
+              }
+            </p>
+          </a>
+        }
+      </div>
+    } @else {
+      <p class="empty-state mt-4">
+        No bottles match that name yet. Try another spelling, or
+        <a class="action-link" routerLink="/discover/flavor">start from a flavor</a>.
+      </p>
+    }
+  </section>
+
+  <p class="m-0 text-sm leading-6 text-ink-soft">
+    Prefer drinks?
+    <a class="action-link" routerLink="/discover/drinks">Browse by the drink</a>
+    or
+    <a class="action-link" routerLink="/cabinet">edit your cabinet</a>.
+  </p>
+</div>

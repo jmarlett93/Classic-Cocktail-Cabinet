@@ -1,32 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { render, screen } from '@testing-library/angular';
 
-import { CabinetStore } from '../../stores/cabinet-store';
 import { CabinetCollectionComponent } from './cabinet-collection.component';
+import { CabinetStore } from '../../stores/cabinet-store';
 
 describe('CabinetCollectionComponent', () => {
-  let component: CabinetCollectionComponent;
-  let fixture: ComponentFixture<CabinetCollectionComponent>;
+  it('renders catalog bottles for the session cabinet', async () => {
+    const { fixture } = await render(CabinetCollectionComponent, {
+      providers: [provideRouter([])],
+    });
+    fixture.debugElement.injector.get(CabinetStore).resetSession();
 
-  beforeEach(async () => {
-    sessionStorage.clear();
-    await TestBed.configureTestingModule({
-      imports: [CabinetCollectionComponent],
-      providers: [CabinetStore, provideRouter([])],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(CabinetCollectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    sessionStorage.clear();
-  });
-
-  it('should create and list catalog bottle ids only', () => {
-    expect(component).toBeTruthy();
-    expect(component.bottles().length).toBeGreaterThan(0);
-    expect(component.bottles().every((bottle) => bottle.id.startsWith('bottle-'))).toBeTrue();
+    expect(screen.getByRole('heading', { name: /What is on your shelf/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Shelf bottles/i })).toBeInTheDocument();
+    expect(fixture.componentInstance.bottles().length).toBeGreaterThan(0);
+    expect(fixture.componentInstance.bottles().every((b) => b.id.startsWith('bottle-'))).toBe(true);
   });
 });

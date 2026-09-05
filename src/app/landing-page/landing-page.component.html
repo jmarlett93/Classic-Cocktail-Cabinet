@@ -1,50 +1,98 @@
-<div class="landing">
-  <div class="landing__inner">
-    <p class="landing__eyebrow">Taste-first bottle finder</p>
-    <h1 class="landing__title">
-      Describe a flavor.
-      <span class="landing__title-accent">Get a ranked shortlist.</span>
-    </h1>
-    <p class="landing__lede">
-      Type how you like drinks to taste—bright, dry, herbal, smoky—and we match your words to bottles in our catalog.
-      Rank order is explainable and consistent; no recipes or shopping lists here, just flavor signals.
-    </p>
-
-    <div class="landing__composer" role="search">
-      <label class="landing__label" for="taste-seed">What flavors are you in the mood for?</label>
-      <div class="landing__field-row">
-        <input
-          id="taste-seed"
-          type="text"
-          class="landing__input"
-          [value]="inputText()"
-          (input)="setInput(($any($event.target)).value)"
-          (keydown.enter)="goToTasteChat()"
-          [attr.placeholder]="placeholderText()"
-          autocomplete="off"
-          aria-describedby="taste-hint"
-        />
-        <button type="button" mat-flat-button class="landing__cta" (click)="goToTasteChat()">
-          Open taste chat
-        </button>
-      </div>
-      <p id="taste-hint" class="landing__hint">Press Enter or the button—your line can prefill the chat.</p>
+<div class="page-flow">
+  <section class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end" aria-labelledby="landing-title">
+    <div class="flex flex-col gap-6">
+      <p class="eyebrow">Classic Cocktail Cabinet</p>
+      <h1 id="landing-title" class="display-title">
+        Choose the bottle. Choose the drink.
+      </h1>
+      <p class="lede">
+        Start with what you want to make or what is already on your shelf. We keep the answer short:
+        the drink, the bottles behind it, and the next buy that unlocks more classics.
+      </p>
     </div>
 
-    <section class="landing__starters" aria-labelledby="starters-heading">
-      <h2 id="starters-heading" class="landing__starters-heading">Try a starter phrase</h2>
-      <mat-chip-set class="landing__chips" aria-label="Example taste phrases">
-        @for (s of tasteStarters; track s.text) {
-          <mat-chip class="landing__chip" (click)="useStarter(s.text)" tabindex="0" (keydown.enter)="useStarter(s.text)">
-            {{ s.label }}
-          </mat-chip>
-        }
-      </mat-chip-set>
-    </section>
+    <div class="quiet-panel">
+      <p class="section-kicker">Tonight's shortcut</p>
+      <p class="m-0 mt-3 font-display text-[2rem] leading-none tracking-[-0.04em]">
+        Not sure of the name?
+      </p>
+      <p class="m-0 mt-3 text-sm leading-6 text-ink-soft">
+        Try a flavor like bitter, citrus, herbal, or smoky. Drinks lead first; bottles follow as ways into the cabinet.
+      </p>
+    </div>
+  </section>
 
-    <p class="landing__footer-note">
-      Already chatting?
-      <a routerLink="/liquor-recommendations" class="landing__link">Continue in taste chat</a>
-    </p>
-  </div>
+  <section class="surface-rule" aria-labelledby="paths-heading">
+    <div class="grid gap-6 lg:grid-cols-[11rem_minmax(0,1fr)]">
+      <div>
+        <p class="section-kicker">Choose a path</p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <a routerLink="/discover/drinks" class="group no-underline text-inherit">
+          <span class="block border-t-4 border-accent-deep bg-surface-raised px-5 py-6 transition duration-150 group-hover:bg-surface-alt motion-reduce:transition-none">
+            <span class="eyebrow">By the drink</span>
+            <span class="mt-4 block font-display text-[2rem] leading-none tracking-[-0.04em]">Find something to make</span>
+            <span class="mt-4 block max-w-[32ch] text-sm leading-6 text-ink-soft">
+              Browse classics, read the finished flavor, then see the bottles and staples behind the glass.
+            </span>
+          </span>
+        </a>
+        <a routerLink="/discover/bottles" class="group no-underline text-inherit">
+          <span class="block border-t-4 border-accent-warm bg-surface-raised px-5 py-6 transition duration-150 group-hover:bg-surface-alt motion-reduce:transition-none">
+            <span class="eyebrow text-accent-warm">By the bottle</span>
+            <span class="mt-4 block font-display text-[2rem] leading-none tracking-[-0.04em]">See what it opens</span>
+            <span class="mt-4 block max-w-[32ch] text-sm leading-6 text-ink-soft">
+              Pick a bottle, see drinks it completes, and get the next bottle with the most useful payoff.
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="quiet-panel" aria-labelledby="flavor-heading">
+    <div class="grid gap-5 lg:grid-cols-[11rem_minmax(0,1fr)] lg:items-start">
+      <div>
+        <h2 id="flavor-heading" class="section-kicker">Start from flavor</h2>
+      </div>
+      <div role="search" class="flex flex-col gap-4">
+        <label class="text-sm font-bold text-ink" for="taste-seed">
+          What should the first sip feel like?
+        </label>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <input
+            id="taste-seed"
+            type="text"
+            class="min-h-12 flex-1 rounded-full border border-border bg-[oklch(0.995_0.006_220)] px-5 text-base text-ink outline-none transition placeholder:text-ink-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_4px_oklch(0.66_0.09_190_/_0.24)] motion-reduce:transition-none"
+            [value]="inputText()"
+            (input)="setInput(($any($event.target)).value)"
+            (keydown.enter)="goToFlavor()"
+            [attr.placeholder]="placeholderText()"
+            autocomplete="off"
+            aria-describedby="taste-hint"
+          />
+          <button type="button" class="primary-button" (click)="goToFlavor()">Find matches</button>
+        </div>
+        <p id="taste-hint" class="m-0 text-sm leading-6 text-ink-soft">
+          Flavor is an entry point, not a chat. We show likely drinks first, then bottles that carry the same signal.
+        </p>
+        <div class="flex flex-wrap gap-2" aria-label="Example flavor phrases">
+          @for (s of tasteStarters; track s.text) {
+            <button
+              type="button"
+              class="secondary-button min-h-10 px-3"
+              (click)="useStarter(s.text)"
+            >
+              {{ s.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="m-0 text-sm leading-6 text-ink-soft">
+    Already stocking shelves?
+    <a routerLink="/cabinet" class="action-link">Edit your cabinet</a>
+  </p>
 </div>
